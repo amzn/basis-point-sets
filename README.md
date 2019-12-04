@@ -15,6 +15,8 @@ Obtained vectors can be used  as inputs to arbitrary machine learning methods, i
  Check our [ICCV 2019 paper](https://arxiv.org/abs/1908.09186) for more 
  details.
  
+
+## Usage
  
 ### Requirements
 
@@ -65,7 +67,7 @@ python demos/train_modelnet_conv3d.py
 ```
 
 
-### Citation
+## Citation
 
 If you find our work useful in your research, please consider citing:
 ```
@@ -76,7 +78,7 @@ If you find our work useful in your research, please consider citing:
   year={2019}
 }
 ```
-### License
+## License
 
 This library is licensed under the MIT-0 License. See the LICENSE file.
 
