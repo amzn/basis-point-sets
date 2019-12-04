@@ -32,7 +32,7 @@ pip3 install git+https://github.com/amzn/basis-point-sets
 ### Code snippet
 
 
-Converting your point clouds to BPS representation takes few lines of code:
+Converting point clouds to BPS representation takes few lines of code:
 
 ```
 import numpy as np
