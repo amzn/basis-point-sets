@@ -8,7 +8,6 @@
       <change beforePath="$USER_HOME$/amazon_code/Bps/examples/ModelNet40 Classification MLP [PyTorch].ipynb" beforeDir="false" afterPath="$USER_HOME$/amazon_code/Bps/examples/ModelNet40 Classification MLP [PyTorch].ipynb" afterDir="false" />
       <change beforePath="$USER_HOME$/amazon_code/Bps/examples/modelnet40_mlp.py" beforeDir="false" afterPath="$USER_HOME$/amazon_code/Bps/examples/modelnet40_mlp.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bps.gif" beforeDir="false" afterPath="$PROJECT_DIR$/bps.gif" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,8 +21,8 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="300">
-                <caret line="20" column="12" lean-forward="true" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
+              <first_editor relative-caret-position="60">
+                <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
               </first_editor>
               <second_editor />
             </state>
@@ -158,8 +157,8 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="300">
-            <caret line="20" column="12" lean-forward="true" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
+          <first_editor relative-caret-position="60">
+            <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
           </first_editor>
           <second_editor />
         </state>
