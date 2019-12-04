@@ -1,14 +1,15 @@
 # Efficient Learning on Point Clouds with Basis Point Sets
 
-Sergey Prokudin, Christoph Lassner, Javier Romero
-ICCV 2019
+Basis Point Set (BPS) is a simple and efficient method for encoding 3D point  clouds into fixed-length representation.
+It is based on a simple idea: select k fixed points in space and compute vectors from  these basis points to the nearest
+points in the point cloud. We can then use these vectors (or simply their norms) as features:
 
 ![Teaser Image](bps.gif)
 
-Basis Point Set (BPS) is a simple and efficient method for encoding 3D point  clouds into fixed-length representation.
 This representation can be used  as input to arbitrary machine learning methods, in particular it can be used
  as input to off-the-shelf neural networks. 
- 
+
+
  Check our [ICCV 2019 paper](https://arxiv.org/abs/1908.09186) for more 
  details.
  
@@ -23,7 +24,7 @@ This representation can be used  as input to arbitrary machine learning methods,
 
 
 ```
-pip3 install git+ssh://git.amazon.com/pkg/Bps
+pip3 install git+https://github.com/amzn/basis-point-sets
 ```
 
 ### Code snippet
