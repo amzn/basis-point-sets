@@ -50,7 +50,6 @@ x_bps_random = bps.encode(x_norm, bps_arrangement='random', n_bps_points=1024, b
 # option 2: encode with 32^3 grid basis and full vectors to nearest points as features
 x_bps_grid = bps.encode(x_norm, bps_arrangement='grid', n_bps_points=32**3, bps_cell_type='deltas')
 x_bps_grid = x_bps_grid.reshape([-1, 32, 32, 32, 3])
-
 ```
 
 ### Demos (coming soon)
@@ -65,7 +64,6 @@ python demos/train_modelnet_mlp.py
 ```
 python demos/train_modelnet_conv3d.py 
 ```
-
 
 ## Citation
 
