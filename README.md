@@ -1,6 +1,7 @@
 # Efficient Learning on Point Clouds with Basis Point Sets
 
 **Basis Point Set (BPS)** is a simple and efficient method for encoding 3D point  clouds into fixed-length representation.
+
 It is based on a **simple idea**: select k fixed points in space and compute vectors from  these basis points to the nearest
 points in the point cloud. We can then use these vectors (or simply their norms) as features:
 
@@ -30,6 +31,8 @@ pip3 install git+https://github.com/amzn/basis-point-sets
 ### Code snippet
 
 
+Converting your point clouds to BPS representation takes few lines of code:
+
 ```
 import numpy as np
 from bps import bps
@@ -37,7 +40,7 @@ from bps import bps
 # batch of 100 point clouds to convert
 x = np.random.normal(size=[100, 2048, 3])
 
-# optional point cloud normalization to fit the unit sphere
+# optional point cloud normalization to fit a unit sphere
 x_norm = bps.normalize(x)
 
 # option 1: encode with 1024 random basis and distances as features
