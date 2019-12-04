@@ -60,19 +60,16 @@ Check one of the provided examples:
 ```
 python demos/train_modelnet_mlp.py 
 ```
-- **ModelNet40 3D shape classification with BPS-Conv3D** (~91% accuracy, ~2-3 hours of training on a GPU):
-```
-python demos/train_modelnet_conv3d.py 
-```
 
 ## Citation
 
 If you find our work useful in your research, please consider citing:
 ```
-@article{prokudin2019efficient,
-  title={Efficient Learning on Point Clouds with Basis Point Sets},
+@inproceedings{prokudin2019efficient,
+  title={Efficient Learning on Point Clouds With Basis Point Sets},
   author={Prokudin, Sergey and Lassner, Christoph and Romero, Javier},
-  journal={arXiv preprint arXiv:1908.09186},
+  booktitle={Proceedings of the IEEE International Conference on Computer Vision},
+  pages={4332--4341},
   year={2019}
 }
 ```
