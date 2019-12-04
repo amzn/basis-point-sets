@@ -1,13 +1,14 @@
 # Efficient Learning on Point Clouds with Basis Point Sets
 
-**Basis Point Set (BPS)** is a simple and efficient method for encoding 3D point  clouds into fixed-length representation.
+**Basis Point Set (BPS)** is a simple and efficient method for encoding 3D point clouds into fixed-length 
+representations.
 
-It is based on a **simple idea**: select k fixed points in space and compute vectors from  these basis points to the nearest
+It is based on a _**simple idea**_: select k fixed points in space and compute vectors from  these basis points to the nearest
 points in the point cloud; use these vectors (or simply their norms) as features:
 
 ![Teaser Image](bps.gif)
 
-Obtained vectors can be used  as inputs to arbitrary machine learning methods, in particular it can be used
+Obtained vectors can be used  as inputs to arbitrary machine learning methods, in particular they can be used
  as input to off-the-shelf neural networks. 
 
 
@@ -50,15 +51,19 @@ x_bps_grid = x_bps_grid.reshape([-1, 32, 32, 32, 3])
 
 ```
 
-### Demos
+### Demos (coming soon)
 
 Check one of the provided examples:
 
-- ModelNet40 3D shape classification with MLP: train a multi-layer perceptron with BPS distance features as inputs 
-(~89% accuracy, ~10-20 mins of training on a non-GPU laptop):
+- **ModelNet40 3D shape classification with BPS-MLP** (~89% accuracy, ~10-20 mins of training on a non-GPU laptop):
 ```
 python demos/train_modelnet_mlp.py 
 ```
+- **ModelNet40 3D shape classification with BPS-Conv3D** (~91% accuracy, ~2-3 hours of training on a GPU):
+```
+python demos/train_modelnet_conv3d.py 
+```
+
 
 ### Citation
 
