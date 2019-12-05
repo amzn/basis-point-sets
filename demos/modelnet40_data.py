@@ -34,7 +34,7 @@ def download_modelnet40_data(url, root_data_dir):
 
     download_path = os.path.join(root_data_dir, 'modelnet40_ply_hdf5_2048.zip')
 
-    print("donwloading ModelNet40 data..")
+    print("downloading ModelNet40 data..")
     modelnet40_url = 'https://shapenet.cs.stanford.edu/media/modelnet40_ply_hdf5_2048.zip'
     urllib.request.urlretrieve(modelnet40_url, download_path, _download_reporthook)
 
@@ -69,7 +69,7 @@ def load_modelnet40(root_data_dir):
 
     def _load_data(file_paths, num_points=2048):
         def _load_h5(h5_filename):
-            f = h5py.File(h5_filename)
+            f = h5py.File(h5_filename, 'r')
             data = f["data"][:]
             label = f["label"][:]
             return (data, label)
