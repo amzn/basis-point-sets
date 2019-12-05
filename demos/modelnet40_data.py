@@ -1,4 +1,5 @@
 import os
+import sys
 import h5py
 import numpy as np
 
@@ -34,7 +35,8 @@ def download_modelnet40_data(url, root_data_dir):
     download_path = os.path.join(root_data_dir, 'modelnet40_ply_hdf5_2048.zip')
 
     print("donwloading ModelNet40 data..")
-    # urllib.request.urlretrieve(modelnet40_url, download_path, _download_reporthook)
+    modelnet40_url = 'https://shapenet.cs.stanford.edu/media/modelnet40_ply_hdf5_2048.zip'
+    urllib.request.urlretrieve(modelnet40_url, download_path, _download_reporthook)
 
     print('unzipping files..')
     _unzip_data(download_path, root_data_dir)
@@ -106,6 +108,9 @@ def load_modelnet40(root_data_dir):
     data_dir = os.path.join(root_data_dir, 'modelnet40_ply_hdf5_2048')
 
     if not os.path.exists(data_dir):
+
+        os.makedirs(data_dir)
+
         modelnet40_url = "https://shapenet.cs.stanford.edu/media/modelnet40_ply_hdf5_2048.zip"
 
         download_modelnet40_data(modelnet40_url, root_data_dir)

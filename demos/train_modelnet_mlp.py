@@ -13,14 +13,18 @@ from bps import bps
 from modelnet40_data import load_modelnet40
 
 
-DATA_PATH = '../data/'
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
+DATA_PATH = os.path.join(PROJECT_DIR, 'data')
+
+
 N_BPS_POINTS = 512
 BPS_RADIUS = 1.7
 
 
 class ShapeClassifierMLP(nn.Module):
 
-    def __init__(self, n_features, n_classes, hsize1=400,  hsize2=400, dropout1=0.8, dropout2=0.4):
+    def __init__(self, n_features, n_classes, hsize1=512,  hsize2=512, dropout1=0.8, dropout2=0.6):
         super(ShapeClassifierMLP, self).__init__()
 
         self.bn0 = nn.BatchNorm1d(n_features)
@@ -68,7 +72,7 @@ def test(model, device, test_loader, epoch_id):
     test_loss /= n_test_samples
     test_acc = 100.0 * n_correct / n_test_samples
     print(
-        "Epoch {} loss: {:.4f}, acc: {}/{} ({:.2f}%)".format(epoch_id, test_loss, n_correct, n_test_samples, test_acc))
+        "Epoch {} loss: {:.4f}, accuracy: {}/{} ({:.2f}%)".format(epoch_id, test_loss, n_correct, n_test_samples, test_acc))
 
     return test_loss, test_acc
 
@@ -82,9 +86,14 @@ def main():
     xtr_normalized = bps.normalize(xtr)
     xte_normalized = bps.normalize(xte)
 
-    # this will encode your normalised point clouds with random basis of 1024 points,
+    # this will encode your normalised point clouds with random basis of 512 points,
     # each BPS cell containing l2-distance to closest point
+    print("converting data to BPS representation..")
+    print("number of basis points: %d" % N_BPS_POINTS)
+    print("BPS sampling radius: %d" % BPS_RADIUS)
+    print("converting train..")
     xtr_bps = bps.encode(xtr_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
+    print("converting test..")
     xte_bps = bps.encode(xte_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
 
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
@@ -96,28 +105,31 @@ def main():
     n_bps_features = xtr_bps.shape[1]
     n_classes = 40
 
-    model = ShapeClassifierMLP(n_features=n_bps_features, n_classes=n_classes, hsize1=512, hsize2=512, dropout1=0.6,
-                               dropout2=0.3)
+    print("defining the model..")
+    model = ShapeClassifierMLP(n_features=n_bps_features, n_classes=n_classes, hsize1=512, hsize2=512, dropout1=0.8,
+                               dropout2=0.6)
 
-    optimizer = pt.optim.Adam(model.parameters(), lr=1e-4)
+    optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
     device = 'cpu'
-    n_epochs = 10000
+    n_epochs = 550
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
 
+    print("training started..")
     model = model.to(device)
 
     for epoch_idx in pbar:
         fit(model, device, tr_loader, optimizer)
-        test_loss, test_acc = test(model, device, te_loader, epoch_idx)
-        if epoch_idx == 900:
+        if epoch_idx == 500:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = 1e-4
+        test_loss, test_acc = test(model, device, te_loader, epoch_idx)
         test_accs.append(test_acc)
         test_losses.append(test_loss)
 
+    print("finished. test accuracy: %f " % test_acc)
     return
 
 

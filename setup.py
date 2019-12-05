@@ -12,7 +12,7 @@ setup(
         "numpy"
     ],
     author="Sergey Prokudin",
-    license="Apache 2.0",
+    license="MIT-0",
     author_email="sergey.prokudin@gmail.com",
     packages=["bps"]
 )
