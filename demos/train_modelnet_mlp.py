@@ -72,7 +72,7 @@ def test(model, device, test_loader, epoch_id):
     test_loss /= n_test_samples
     test_acc = 100.0 * n_correct / n_test_samples
     print(
-        "Epoch {} loss: {:.4f}, accuracy: {}/{} ({:.2f}%)".format(epoch_id, test_loss, n_correct, n_test_samples, test_acc))
+        "Epoch {} test loss: {:.4f}, test accuracy: {}/{} ({:.2f}%)".format(epoch_id, test_loss, n_correct, n_test_samples, test_acc))
 
     return test_loss, test_acc
 
@@ -90,7 +90,7 @@ def main():
     # each BPS cell containing l2-distance to closest point
     print("converting data to BPS representation..")
     print("number of basis points: %d" % N_BPS_POINTS)
-    print("BPS sampling radius: %d" % BPS_RADIUS)
+    print("BPS sampling radius: %f" % BPS_RADIUS)
     print("converting train..")
     xtr_bps = bps.encode(xtr_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
     print("converting test..")
@@ -112,7 +112,8 @@ def main():
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
     device = 'cpu'
-    n_epochs = 550
+    #n_epochs = 550
+    n_epochs = 770
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
@@ -122,7 +123,7 @@ def main():
 
     for epoch_idx in pbar:
         fit(model, device, tr_loader, optimizer)
-        if epoch_idx == 500:
+        if epoch_idx == 700:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = 1e-4
         test_loss, test_acc = test(model, device, te_loader, epoch_idx)
