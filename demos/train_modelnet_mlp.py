@@ -10,7 +10,7 @@ import torch.nn.functional as F
 
 # local dependencies
 from bps import bps
-from modelnet40_data import load_modelnet40
+from modelnet40 import load_modelnet40
 
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
