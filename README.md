@@ -8,9 +8,9 @@ points in the point cloud; use these vectors (or simply their norms) as features
 
 ![Teaser Image](bps.gif)
 
-These _k_ basis points are kept fixed for all the point clouds in the dataset, providing a fixed representation of every 
-point cloud as a vector. This representation can be used  as input to arbitrary machine learning methods, in particular 
-it can be used as input to off-the-shelf neural networks. 
+The basis points are kept fixed for all the point clouds in the dataset, providing a fixed representation of every 
+point cloud as a vector. This representation can then be used  as input to arbitrary machine learning methods, in 
+particular it can be used as input to off-the-shelf neural networks. 
 
 
  Check our [ICCV 2019 paper](https://arxiv.org/abs/1908.09186) for more 
