@@ -22,6 +22,8 @@ it can be used as input to off-the-shelf neural networks.
 ### Requirements
 
 - Python 3.7
+- scikit-learn >= 0.21
+- PyTorch >= 1.3 (for running provided demos only)
 
 ### Installation
 
