@@ -8,8 +8,9 @@ points in the point cloud; use these vectors (or simply their norms) as features
 
 ![Teaser Image](bps.gif)
 
-Obtained vectors can be used  as inputs to arbitrary machine learning methods, in particular they can be used
- as input to off-the-shelf neural networks. 
+These _k_ basis points are kept fixed for all the point clouds in the dataset, providing a fixed representation of every 
+point cloud as a vector. This representation can be used  as input to arbitrary machine learning methods, in particular 
+it can be used as input to off-the-shelf neural networks. 
 
 
  Check our [ICCV 2019 paper](https://arxiv.org/abs/1908.09186) for more 
@@ -52,7 +53,7 @@ x_bps_grid = bps.encode(x_norm, bps_arrangement='grid', n_bps_points=32**3, bps_
 x_bps_grid = x_bps_grid.reshape([-1, 32, 32, 32, 3])
 ```
 
-### Demos (coming soon)
+### Demos
 
 Check one of the provided examples:
 
