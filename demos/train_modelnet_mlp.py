@@ -112,7 +112,6 @@ def main():
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
     device = 'cpu'
-    #n_epochs = 550
     n_epochs = 770
     pbar = range(0, n_epochs)
     test_accs = []
@@ -125,6 +124,7 @@ def main():
         fit(model, device, tr_loader, optimizer)
         if epoch_idx == 700:
             for param_group in optimizer.param_groups:
+                print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
         test_loss, test_acc = test(model, device, te_loader, epoch_idx)
         test_accs.append(test_acc)
