@@ -102,9 +102,9 @@ def main():
     else:
         print("loading converted data from cache..")
         data = np.load(BPS_CACHE_FILE)
-        xtr_bps = data['xtr_bps']
+        xtr_bps = data['xtr']
         ytr = data['ytr']
-        xte_bps = data['xte_bps']
+        xte_bps = data['xte']
         yte = data['yte']
 
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
