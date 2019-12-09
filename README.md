@@ -73,7 +73,10 @@ Check one of the provided examples:
 ```
 python bps_demos/train_modelnet_mlp.py cpu
 ```
-
+same with a GPU, ~2 minutes of training:
+```
+python bps_demos/train_modelnet_mlp.py cuda
+```
 - **ModelNet40 3D shape classification with BPS-Conv3D**: _coming soon_.
 
 - **Human body mesh registration**: _coming soon_.
