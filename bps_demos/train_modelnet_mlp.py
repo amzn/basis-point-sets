@@ -16,7 +16,7 @@ from modelnet40 import load_modelnet40
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 DATA_PATH = os.path.join(PROJECT_DIR, 'data')
-
+BSP_CACHE_FILE = os.path.join(DATA_PATH, 'bps_mlp_data.npz')
 
 N_BPS_POINTS = 512
 BPS_RADIUS = 1.7
@@ -89,14 +89,16 @@ def main():
 
     # this will encode your normalised point clouds with random basis of 512 points,
     # each BPS cell containing l2-distance to closest point
-    print("converting data to BPS representation..")
-    print("number of basis points: %d" % N_BPS_POINTS)
-    print("BPS sampling radius: %f" % BPS_RADIUS)
-    print("converting train..")
-    xtr_bps = bps.encode(xtr_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
-    print("converting test..")
-    xte_bps = bps.encode(xte_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
 
+    if not os.path.exists(BSP_CACHE_FILE):
+        print("converting data to BPS representation..")
+        print("number of basis points: %d" % N_BPS_POINTS)
+        print("BPS sampling radius: %f" % BPS_RADIUS)
+        print("converting train..")
+        xtr_bps = bps.encode(xtr_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
+        print("converting test..")
+        xte_bps = bps.encode(xte_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
+        np.save()
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
     tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=512, shuffle=True)
 
@@ -112,7 +114,7 @@ def main():
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
-    n_epochs = 900
+    n_epochs = 1000
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
