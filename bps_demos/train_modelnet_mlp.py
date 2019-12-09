@@ -97,8 +97,10 @@ def main():
         xtr_bps = bps.encode(xtr_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
         print("converting test..")
         xte_bps = bps.encode(xte_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
+        print("saving cache file for future runs..")
         np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)
     else:
+        print("loading converted data from cache..")
         data = np.load(BPS_CACHE_FILE)
         xtr_bps = data['xtr_bps']
         ytr = data['ytr']
