@@ -1,6 +1,6 @@
 import numpy as np
 import os
-
+import sys
 
 # PyTorch dependencies
 import torch as pt
@@ -20,6 +20,7 @@ DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 
 N_BPS_POINTS = 512
 BPS_RADIUS = 1.7
+DEVICE = sys.argv[1]  # 'cpu' or 'cuda'
 
 
 class ShapeClassifierMLP(nn.Module):
@@ -111,25 +112,26 @@ def main():
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
-    device = 'cpu'
-    n_epochs = 770
+    n_epochs = 900
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
 
     print("training started..")
-    model = model.to(device)
+    model = model.to(DEVICE)
 
     for epoch_idx in pbar:
-        fit(model, device, tr_loader, optimizer)
+        fit(model, DEVICE, tr_loader, optimizer)
         if epoch_idx == 700:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
-        test_loss, test_acc = test(model, device, te_loader, epoch_idx)
-        test_accs.append(test_acc)
-        test_losses.append(test_loss)
+        if epoch_idx / 10 == 0:
+            test_loss, test_acc = test(model, DEVICE, te_loader, epoch_idx)
+            test_accs.append(test_acc)
+            test_losses.append(test_loss)
 
+    _, test_acc = test(model, DEVICE, te_loader, n_epochs)
     print("finished. test accuracy: %f " % test_acc)
     return
 

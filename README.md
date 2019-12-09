@@ -23,7 +23,7 @@ particular it can be used as input to off-the-shelf neural networks.
 
 - Python 3.7
 - scikit-learn >= 0.21
-- PyTorch >= 1.3 (for running provided demos only)
+- PyTorch >= 1.3 (for running provided demos)
 
 ### Installation
 
@@ -57,12 +57,26 @@ x_bps_grid = x_bps_grid.reshape([-1, 32, 32, 32, 3])
 
 ### Demos
 
+Clone the repository and install the dependencies:
+
+```
+git clone https://github.com/amzn/basis-point-sets
+cd basis-point-sets
+python setup.py install
+```
+
+
 Check one of the provided examples:
 
 - **ModelNet40 3D shape classification with BPS-MLP** (~89% accuracy, ~10-20 mins of training on a non-GPU laptop):
 ```
-python demos/train_modelnet_mlp.py 
+python bps_demos/train_modelnet_mlp.py 
 ```
+
+- **ModelNet40 3D shape classification with BPS-MLP** (_coming soon_):
+
+- **Human body mesh registration** (_coming soon_):
+
 
 ## Citation
 

@@ -13,6 +13,25 @@ setup(
     ],
     author="Sergey Prokudin",
     license="MIT-0",
-    author_email="sergey.prokudin@gmail.com",
+    author_email="prokus@amazon.com",
     packages=["bps"]
+)
+
+
+setup(
+    name="bps_demos",
+    version=1.0,
+    description="Demos showcasing the usage of ",
+    setup_requires=["numpy", "sklearn", "tqdm", "torch", "h5py"],
+    install_requires=[
+        "sklearn",
+        "tqdm",
+        "numpy",
+        "torch",
+        "h5py"
+    ],
+    author="Sergey Prokudin",
+    license="MIT-0",
+    author_email="prokus@amazon.com",
+    packages=["bps_demos"]
 )
