@@ -73,7 +73,7 @@ Check one of the provided examples:
 python bps_demos/train_modelnet_mlp.py cpu
 ```
 
-- **ModelNet40 3D shape classification with BPS-MLP**: _coming soon_.
+- **ModelNet40 3D shape classification with BPS-Conv3D**: _coming soon_.
 
 - **Human body mesh registration**: _coming soon_.
 
