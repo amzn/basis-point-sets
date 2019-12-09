@@ -16,7 +16,7 @@ from modelnet40 import load_modelnet40
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 DATA_PATH = os.path.join(PROJECT_DIR, 'data')
-BSP_CACHE_FILE = os.path.join(DATA_PATH, 'bps_mlp_data.npz')
+BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_mlp_data.npz')
 
 N_BPS_POINTS = 512
 BPS_RADIUS = 1.7
@@ -80,17 +80,16 @@ def test(model, device, test_loader, epoch_id):
 
 def main():
 
-    # load modelnet point clouds
-    xtr, ytr, xte, yte = load_modelnet40(root_data_dir=DATA_PATH)
+    if not os.path.exists(BPS_CACHE_FILE):
+        # load modelnet point clouds
+        xtr, ytr, xte, yte = load_modelnet40(root_data_dir=DATA_PATH)
 
-    # this will normalise your point clouds and return scaler parameters for inverse operation
-    xtr_normalized = bps.normalize(xtr)
-    xte_normalized = bps.normalize(xte)
+        # this will normalise your point clouds and return scaler parameters for inverse operation
+        xtr_normalized = bps.normalize(xtr)
+        xte_normalized = bps.normalize(xte)
 
-    # this will encode your normalised point clouds with random basis of 512 points,
-    # each BPS cell containing l2-distance to closest point
-
-    if not os.path.exists(BSP_CACHE_FILE):
+        # this will encode your normalised point clouds with random basis of 512 points,
+        # each BPS cell containing l2-distance to closest point
         print("converting data to BPS representation..")
         print("number of basis points: %d" % N_BPS_POINTS)
         print("BPS sampling radius: %f" % BPS_RADIUS)
@@ -98,7 +97,14 @@ def main():
         xtr_bps = bps.encode(xtr_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
         print("converting test..")
         xte_bps = bps.encode(xte_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
-        np.save()
+        np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)
+    else:
+        data = np.load(BPS_CACHE_FILE)
+        xtr_bps = data['xtr_bps']
+        ytr = data['ytr']
+        xte_bps = data['xte_bps']
+        yte = data['yte']
+
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
     tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=512, shuffle=True)
 
