@@ -19,7 +19,7 @@ DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 
 N_BPS_POINTS = 32**3
-BPS_RADIUS = 1.5
+BPS_RADIUS = 1.2
 DEVICE = sys.argv[1]  # 'cpu' or 'cuda'
 
 
