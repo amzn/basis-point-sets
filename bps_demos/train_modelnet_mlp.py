@@ -25,7 +25,7 @@ DEVICE = sys.argv[1]  # 'cpu' or 'cuda'
 
 class ShapeClassifierMLP(nn.Module):
 
-    def __init__(self, n_features, n_classes, hsize1=400,  hsize2=400, dropout1=0.8, dropout2=0.6):
+    def __init__(self, n_features, n_classes, hsize1=512,  hsize2=512, dropout1=0.8, dropout2=0.6):
         super(ShapeClassifierMLP, self).__init__()
 
         self.bn0 = nn.BatchNorm1d(n_features)
