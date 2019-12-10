@@ -132,10 +132,10 @@ def main():
         yte = data['yte']
 
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps.transpose(0, 4, 2, 3, 1)), pt.Tensor(ytr[:, 0]).long())
-    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=512, shuffle=True)
+    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=64, shuffle=True)
 
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps.transpose(0, 4, 2, 3, 1)), pt.Tensor(yte[:, 0]).long())
-    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=512, shuffle=True)
+    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=64, shuffle=True)
 
     n_bps_features = xtr_bps.shape[1]
     n_classes = 40
