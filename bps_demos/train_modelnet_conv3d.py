@@ -19,7 +19,7 @@ DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 
 N_BPS_POINTS = 32**3
-BPS_RADIUS = 1.7
+BPS_RADIUS = 1.5
 DEVICE = sys.argv[1]  # 'cpu' or 'cuda'
 
 
@@ -40,13 +40,13 @@ class ShapeClassifierConv3D(nn.Module):
         self.bn22 = nn.BatchNorm3d(64)
         self.mp2 = nn.MaxPool3d(kernel_size=(2, 2, 2))
 
-        self.fc1 = nn.Linear(in_features=8000, out_features=4096)
-        self.bn1 = nn.BatchNorm1d(4096)
+        self.fc1 = nn.Linear(in_features=8000, out_features=2048)
+        self.bn1 = nn.BatchNorm1d(2048)
         self.do1 = nn.Dropout(0.8)
-        self.fc2 = nn.Linear(in_features=4096, out_features=1024)
-        self.bn2 = nn.BatchNorm1d(1024)
+        self.fc2 = nn.Linear(in_features=2048, out_features=512)
+        self.bn2 = nn.BatchNorm1d(512)
         self.do2 = nn.Dropout(0.8)
-        self.fc3 = nn.Linear(in_features=1024, out_features=n_classes)
+        self.fc3 = nn.Linear(in_features=512, out_features=n_classes)
 
     def forward(self, x):
         x = self.bn11(F.relu(self.conv11(x)))
@@ -133,11 +133,11 @@ def main():
 
     xtr_bps = xtr_bps.transpose(0, 4, 2, 3, 1)
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
-    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=32, shuffle=True)
+    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=512, shuffle=True)
 
     xte_bps = xte_bps.transpose(0, 4, 2, 3, 1)
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
-    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=32, shuffle=True)
+    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=512, shuffle=True)
 
     n_bps_features = xtr_bps.shape[1]
     n_classes = 40
