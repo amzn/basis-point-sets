@@ -77,8 +77,10 @@ same with a GPU, ~2 minutes of training:
 ```
 python bps_demos/train_modelnet_mlp.py cuda
 ```
-- **ModelNet40 3D shape classification with BPS-Conv3D**: _coming soon_.
-
+- **ModelNet40 3D shape classification with BPS-Conv3D**:
+```
+python bps_demos/train_modelnet_conv3d.py cuda
+```
 - **Human body mesh registration**: _coming soon_.
 
 
