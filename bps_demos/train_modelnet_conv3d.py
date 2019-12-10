@@ -40,12 +40,13 @@ class ShapeClassifierConv3D(nn.Module):
         self.bn22 = nn.BatchNorm3d(64)
         self.mp2 = nn.MaxPool3d(kernel_size=(2, 2, 2))
 
+        self.do1 = nn.Dropout(0.8)
         self.fc1 = nn.Linear(in_features=8000, out_features=2048)
         self.bn1 = nn.BatchNorm1d(2048)
-        self.do1 = nn.Dropout(0.8)
+        self.do2 = nn.Dropout(0.8)
         self.fc2 = nn.Linear(in_features=2048, out_features=512)
         self.bn2 = nn.BatchNorm1d(512)
-        self.do2 = nn.Dropout(0.8)
+        self.do3 = nn.Dropout(0.8)
         self.fc3 = nn.Linear(in_features=512, out_features=n_classes)
 
     def forward(self, x):
@@ -57,7 +58,7 @@ class ShapeClassifierConv3D(nn.Module):
         x = self.bn22(F.relu(self.conv22(x)))
         x = self.mp2(x)
 
-        x = x.reshape([-1, 8000])
+        x = self.do1(x.reshape([-1, 8000]))
 
         x = self.do1(self.bn1(F.relu(self.fc1(x))))
         x = self.do2(self.bn2(F.relu(self.fc2(x))))
