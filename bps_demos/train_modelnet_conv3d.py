@@ -158,10 +158,14 @@ def main():
 
     for epoch_idx in pbar:
         fit(model, DEVICE, tr_loader, optimizer)
-        if epoch_idx == 700:
+        if epoch_idx == 50:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
+        if epoch_idx == 250:
+            for param_group in optimizer.param_groups:
+                print("decreasing the learning rate to 1e-5..")
+                param_group['lr'] = 1e-5
         if epoch_idx % 1 == 0:
             test_loss, test_acc = test(model, DEVICE, te_loader, epoch_idx)
             test_accs.append(test_acc)
