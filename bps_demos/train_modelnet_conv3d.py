@@ -18,7 +18,7 @@ PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 
-N_BPS_POINTS = 512
+N_BPS_POINTS = 32**3
 BPS_RADIUS = 1.7
 DEVICE = sys.argv[1]  # 'cpu' or 'cuda'
 
@@ -114,11 +114,13 @@ def main():
         print("number of basis points: %d" % N_BPS_POINTS)
         print("BPS sampling radius: %f" % BPS_RADIUS)
         print("converting train..")
-        xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=32**3, bps_cell_type='deltas')
+        xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
+                             bps_cell_type='deltas')
         xtr_bps = xtr_bps.reshape([-1, 32, 32, 32, 3])
         print("converting test..")
-        xte_bps = bps.encode(xte_normalized, bps_arrangement='grid', n_bps_points=32**3, bps_cell_type='deltas')
-        xte_bps = xte_bps.reshape([-1, 32, 32, 32, 3]).trasn
+        xte_bps = bps.encode(xte_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
+                             bps_cell_type='deltas')
+        xte_bps = xte_bps.reshape([-1, 32, 32, 32, 3])
         print("saving cache file for future runs..")
         np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)
     else:
