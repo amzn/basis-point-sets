@@ -117,6 +117,7 @@ def main():
         xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
                              bps_cell_type='deltas')
         xtr_bps = xtr_bps.reshape([-1, 32, 32, 32, 3])
+
         print("converting test..")
         xte_bps = bps.encode(xte_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
                              bps_cell_type='deltas')

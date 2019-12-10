@@ -117,7 +117,7 @@ def main():
     n_classes = 40
 
     print("defining the model..")
-    model = ShapeClassifierMLP(n_features=n_bps_features, n_classes=n_classes, hsize1=512, hsize2=512, dropout1=0.8,
+    model = ShapeClassifierMLP(n_features=n_bps_features, n_classes=n_classes, hsize1=400, hsize2=400, dropout1=0.8,
                                dropout2=0.6)
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
