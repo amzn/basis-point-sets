@@ -302,18 +302,67 @@ def encode(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cell_t
 
     if n_jobs == 1:
 
-        x_bps = _encode_single_thread(x, bps_arrangement=bps_arrangement, n_bps_points=n_bps_points, radius=radius,
-                                      bps_cell_type=bps_cell_type, verbose=verbose, random_seed=random_seed,
-                                      x_features=x_features, custom_basis=custom_basis)
+        n_clouds, n_points, n_dims = x.shape
+
+        if bps_arrangement == 'random':
+            basis_set = generate_random_basis(n_bps_points, n_dims=n_dims, radius=radius, random_seed=random_seed)
+        elif bps_arrangement == 'grid':
+            # in case of a grid basis, we need to find the nearest possible grid size
+            grid_size = int(np.round(np.power(n_bps_points, 1 / n_dims)))
+            basis_set = generate_grid_basis(grid_size=grid_size, minv=-radius, maxv=radius)
+        elif bps_arrangement == 'custom':
+            # in case of a grid basis, we need to find the nearest possible grid size
+            if custom_basis is not None:
+                basis_set = custom_basis
+            else:
+                raise ValueError("Custom BPS arrangement selected, but no custom_basis provided.")
+        else:
+            raise ValueError("Invalid basis type. Supported types: \'random\', \'grid\', \'custom\'")
+
+        n_bps_points = basis_set.shape[0]
+
+        if bps_cell_type == 'dists':
+            x_bps = np.zeros([n_clouds, n_bps_points])
+        elif bps_cell_type == 'deltas':
+            x_bps = np.zeros([n_clouds, n_bps_points, n_dims])
+        elif bps_cell_type == 'closest':
+            x_bps = np.zeros([n_clouds, n_bps_points, n_dims])
+        elif bps_cell_type == 'features':
+            n_features = x_features.shape[2]
+            x_bps = np.zeros([n_clouds, n_bps_points, n_features])
+        else:
+            raise ValueError("Invalid cell type. Supported types: \'dists\', \'deltas\', \'closest\', \'features\'")
+        fid_lst = range(0, x.shape[0])
+
+        if verbose:
+            fid_lst = tqdm(fid_lst)
+
+        for fid in fid_lst:
+            nbrs = NearestNeighbors(n_neighbors=1, leaf_size=1, algorithm="ball_tree").fit(x[fid])
+            fid_dist, npts_ix = nbrs.kneighbors(basis_set)
+            if bps_cell_type == 'dists':
+                x_bps[fid] = fid_dist.squeeze()
+            elif bps_cell_type == 'deltas':
+                x_bps[fid] = x[fid][npts_ix].squeeze() - basis_set
+            elif bps_cell_type == 'closest':
+                x_bps[fid] = x[fid][npts_ix].squeeze()
+            elif bps_cell_type == 'features':
+                x_bps[fid] = x_features[fid][npts_ix].squeeze()
+
+        return x_bps
+
     else:
 
         if verbose:
             print("using %d CPUs for encoding.." % n_jobs)
 
-        bps_encode_func = partial(_encode_single_thread, )
+        bps_encode_func = partial(encode, bps_arrangement=bps_arrangement, n_bps_points=n_bps_points, radius=radius,
+                                  bps_cell_type=bps_cell_type, verbose=verbose, random_seed=random_seed,
+                                  x_features=x_features, custom_basis=custom_basis, n_jobs=1)
+
         pool = multiprocessing.Pool(n_jobs)
         x_chunks = np.array_split(x, n_jobs)
         x_bps = np.concatenate(pool.map(bps_encode_func, x_chunks), 0)
         pool.close()
 
-    return x_bps
+        return x_bps
