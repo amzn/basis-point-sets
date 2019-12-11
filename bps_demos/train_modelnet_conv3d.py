@@ -49,7 +49,7 @@ class ShapeClassifierConv3D(nn.Module):
         self.do2 = nn.Dropout(0.9)
         self.fc2 = nn.Linear(in_features=2048, out_features=512)
         self.bn2 = nn.BatchNorm1d(512)
-        self.do3 = nn.Dropout(0.9)
+        self.do3 = nn.Dropout(0.8)
         self.fc3 = nn.Linear(in_features=512, out_features=n_classes)
 
     def forward(self, x):
