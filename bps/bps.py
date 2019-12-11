@@ -1,3 +1,5 @@
+from functools import partial
+import multiprocessing
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 from tqdm import tqdm
@@ -174,9 +176,92 @@ def generate_grid_basis(grid_size=32, n_dims=3, minv=-1.0, maxv=1.0):
 
     return basis
 
+# def encode(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cell_type='dists',
+#            verbose=1, random_seed=13, x_features=None, custom_basis=None):
+#     """Converts point clouds to basis point set (BPS) representation
+#
+#     Parameters
+#     ----------
+#     x: numpy array [n_clouds, n_points, n_dims]
+#         batch of point clouds to be converted
+#     bps_arrangement: str
+#         supported BPS arrangements: "random", "grid", "custom"
+#     n_bps_points: int
+#         number of basis points
+#     radius: float
+#         radius for BPS sampling area
+#     bps_cell_type: str
+#         type of information stored in every BPS cell. Supported:
+#             'dists': Euclidean distance to the nearest point in cloud
+#             'deltas': delta vector from basis point to the nearest point
+#             'closest': closest point itself
+#             'features': return features of the closest point supplied by x_features.
+#                         e.g. RGB values of points, surface normals, etc.
+#     x_features: numpy array [n_clouds, n_points, n_features]
+#         point features that will be stored in BPS cells if return_values=='features'
+#     custom_basis: numpy array [n_basis_points, n_dims]
+#         custom basis to use
+#     verbose: boolean
+#         whether to show conversion progress
+#
+#     Returns
+#     -------
+#     x_bps: [n_clouds, n_points, n_bps_features]
+#         point clouds converted to BPS representation.
+#     """
+#
+#     n_clouds, n_points, n_dims = x.shape
+#
+#     if bps_arrangement == 'random':
+#         basis_set = generate_random_basis(n_bps_points, n_dims=n_dims, radius=radius, random_seed=random_seed)
+#     elif bps_arrangement == 'grid':
+#         # in case of a grid basis, we need to find the nearest possible grid size
+#         grid_size = int(np.round(np.power(n_bps_points, 1 / n_dims)))
+#         basis_set = generate_grid_basis(grid_size=grid_size, minv=-radius, maxv=radius)
+#     elif bps_arrangement == 'custom':
+#         # in case of a grid basis, we need to find the nearest possible grid size
+#         if custom_basis is not None:
+#             basis_set = custom_basis
+#         else:
+#             raise ValueError("Custom BPS arrangement selected, but no custom_basis provided.")
+#     else:
+#         raise ValueError("Invalid basis type. Supported types: \'random\', \'grid\', \'custom\'")
+#
+#     n_bps_points = basis_set.shape[0]
+#
+#     if bps_cell_type == 'dists':
+#         x_bps = np.zeros([n_clouds, n_bps_points])
+#     elif bps_cell_type == 'deltas':
+#         x_bps = np.zeros([n_clouds, n_bps_points, n_dims])
+#     elif bps_cell_type == 'closest':
+#         x_bps = np.zeros([n_clouds, n_bps_points, n_dims])
+#     elif bps_cell_type == 'features':
+#         n_features = x_features.shape[2]
+#         x_bps = np.zeros([n_clouds, n_bps_points, n_features])
+#     else:
+#         raise ValueError("Invalid cell type. Supported types: \'dists\', \'deltas\', \'closest\', \'features\'")
+#     fid_lst = range(0, x.shape[0])
+#
+#     if verbose:
+#         fid_lst = tqdm(fid_lst)
+#
+#     for fid in fid_lst:
+#         nbrs = NearestNeighbors(n_neighbors=1, leaf_size=1, algorithm="ball_tree").fit(x[fid])
+#         fid_dist, npts_ix = nbrs.kneighbors(basis_set)
+#         if bps_cell_type == 'dists':
+#             x_bps[fid] = fid_dist.squeeze()
+#         elif bps_cell_type == 'deltas':
+#             x_bps[fid] = x[fid][npts_ix].squeeze() - basis_set
+#         elif bps_cell_type == 'closest':
+#             x_bps[fid] = x[fid][npts_ix].squeeze()
+#         elif bps_cell_type == 'features':
+#             x_bps[fid] = x_features[fid][npts_ix].squeeze()
+#
+#     return x_bps
+
 
 def encode(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cell_type='dists',
-           verbose=1, random_seed=13, x_features=None, custom_basis=None):
+           verbose=1, random_seed=13, x_features=None, custom_basis=None, n_jobs=-1):
     """Converts point clouds to basis point set (BPS) representation
 
     Parameters
@@ -196,12 +281,14 @@ def encode(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cell_t
             'closest': closest point itself
             'features': return features of the closest point supplied by x_features.
                         e.g. RGB values of points, surface normals, etc.
+    verbose: boolean
+        whether to show conversion progress
     x_features: numpy array [n_clouds, n_points, n_features]
         point features that will be stored in BPS cells if return_values=='features'
     custom_basis: numpy array [n_basis_points, n_dims]
         custom basis to use
-    verbose: boolean
-        whether to show conversion progress
+    n_jobs: int
+        number of parallel jobs used for encoding. If -1, use all available CPUs
 
     Returns
     -------
@@ -228,32 +315,43 @@ def encode(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cell_t
 
     n_bps_points = basis_set.shape[0]
 
-    if bps_cell_type == 'dists':
-        x_bps = np.zeros([n_clouds, n_bps_points])
-    elif bps_cell_type == 'deltas':
-        x_bps = np.zeros([n_clouds, n_bps_points, n_dims])
-    elif bps_cell_type == 'closest':
-        x_bps = np.zeros([n_clouds, n_bps_points, n_dims])
-    elif bps_cell_type == 'features':
-        n_features = x_features.shape[2]
-        x_bps = np.zeros([n_clouds, n_bps_points, n_features])
-    else:
-        raise ValueError("Invalid cell type. Supported types: \'dists\', \'deltas\', \'closest\', \'features\'")
-    fid_lst = range(0, x.shape[0])
+    def _encode_chunk(x):
 
-    if verbose:
-        fid_lst = tqdm(fid_lst)
-
-    for fid in fid_lst:
-        nbrs = NearestNeighbors(n_neighbors=1, leaf_size=1, algorithm="ball_tree").fit(x[fid])
-        fid_dist, npts_ix = nbrs.kneighbors(basis_set)
         if bps_cell_type == 'dists':
-            x_bps[fid] = fid_dist.squeeze()
+            x_bps = np.zeros([n_clouds, n_bps_points])
         elif bps_cell_type == 'deltas':
-            x_bps[fid] = x[fid][npts_ix].squeeze() - basis_set
+            x_bps = np.zeros([n_clouds, n_bps_points, n_dims])
         elif bps_cell_type == 'closest':
-            x_bps[fid] = x[fid][npts_ix].squeeze()
+            x_bps = np.zeros([n_clouds, n_bps_points, n_dims])
         elif bps_cell_type == 'features':
-            x_bps[fid] = x_features[fid][npts_ix].squeeze()
+            n_features = x_features.shape[2]
+            x_bps = np.zeros([n_clouds, n_bps_points, n_features])
+        else:
+            raise ValueError("Invalid cell type. Supported types: \'dists\', \'deltas\', \'closest\', \'features\'")
+        fid_lst = range(0, x.shape[0])
+
+        if verbose:
+            fid_lst = tqdm(fid_lst)
+
+        for fid in fid_lst:
+            nbrs = NearestNeighbors(n_neighbors=1, leaf_size=1, algorithm="ball_tree").fit(x[fid])
+            fid_dist, npts_ix = nbrs.kneighbors(basis_set)
+            if bps_cell_type == 'dists':
+                x_bps[fid] = fid_dist.squeeze()
+            elif bps_cell_type == 'deltas':
+                x_bps[fid] = x[fid][npts_ix].squeeze() - basis_set
+            elif bps_cell_type == 'closest':
+                x_bps[fid] = x[fid][npts_ix].squeeze()
+            elif bps_cell_type == 'features':
+                x_bps[fid] = x_features[fid][npts_ix].squeeze()
+        return x_bps
+
+    if n_jobs == -1:
+        n_jobs = multiprocessing.cpu_count()
+
+    print("using %d CPUs for encoding.." % n_jobs)
+    pool = multiprocessing.Pool(n_jobs)
+    x_bps = np.concatenate(pool.map(_encode_chunk, np.array_split(x, n_jobs)), 0)
+    pool.close()
 
     return x_bps
