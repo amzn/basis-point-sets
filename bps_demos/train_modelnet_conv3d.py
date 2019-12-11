@@ -120,17 +120,17 @@ def main():
         #print("using %d available CPUs for BPS encoding.." % N_CPUS)
         # print("converting train..")
 
-        pool = multiprocessing.Pool(N_CPUS)
-        bps_encode_func = partial(bps.encode, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
-                                  bps_cell_type='deltas')
+        #pool = multiprocessing.Pool(N_CPUS)
+        #bps_encode_func = partial(bps.encode, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
+        #                          bps_cell_type='deltas')
 
-        xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
+        xtr_bps = bps.encode_mp(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
                              bps_cell_type='deltas')
         #xtr_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xtr, N_CPUS)), 0)
         xtr_bps = xtr_bps.reshape([-1, 32, 32, 32, 3])
 
         print("converting test..")
-        xte_bps = bps.encode(xte_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
+        xte_bps = bps.encode_mp(xte_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
                              bps_cell_type='deltas')
         #xte_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xte, N_CPUS)), 0)
         xte_bps = xte_bps.reshape([-1, 32, 32, 32, 3])
