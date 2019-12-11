@@ -15,7 +15,6 @@ particular it can be used as input to off-the-shelf neural networks.
 
  Check our [ICCV 2019 paper](https://arxiv.org/abs/1908.09186) for more 
  details.
- 
 
 ## Usage
  
@@ -83,9 +82,6 @@ python bps_demos/train_modelnet_conv3d.py cuda
 ```
 - **Human body mesh registration**: _coming soon_.
 
-Visual example of the network using BPS representation for the task of mesh registration:
-
-![Teaser Image](bps_demo.png)
 
 ## Citation
 
