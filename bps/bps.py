@@ -302,9 +302,10 @@ def encode_mp(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cel
 
     print("using %d CPUs for encoding.." % n_jobs)
 
-    bps_encode_func = partial(bps.encode, bps_arrangement=bps_arrangement, n_bps_points=n_bps_points, radius=radius,
+    bps_encode_func = partial(encode, bps_arrangement=bps_arrangement, n_bps_points=n_bps_points, radius=radius,
                               bps_cell_type=bps_cell_type, verbose=verbose, random_seed=random_seed,
                               x_features=x_features, custom_basis=custom_basis)
+
     pool = multiprocessing.Pool(n_jobs)
     x_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(x, n_jobs)), 0)
     pool.close()
