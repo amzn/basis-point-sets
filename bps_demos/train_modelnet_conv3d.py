@@ -20,6 +20,7 @@ PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 
+N_CPUS = multiprocessing.cpu_count() - 1
 N_BPS_POINTS = 32**3
 BPS_RADIUS = 1.2
 DEVICE = sys.argv[1]  # 'cpu' or 'cuda'
@@ -116,25 +117,25 @@ def main():
         print("converting data to BPS representation..")
         print("number of basis points: %d" % N_BPS_POINTS)
         print("BPS sampling radius: %f" % BPS_RADIUS)
+        print("using %d for BPS encoding.." % N_CPUS)
         print("converting train..")
 
-        n_cpus = multiprocessing.cpu_count() - 1
-        pool = multiprocessing.Pool(n_cpus)
+        pool = multiprocessing.Pool(N_CPUS)
         bps_encode_func = partial(bps.encode, bps_arrangement='grid', n_bps_points=32 ** 3, radius=1.2,
                                   bps_cell_type='dists')
 
         # xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
         #                      bps_cell_type='deltas')
-        xtr_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xtr, n_cpus)), 0)
-
+        xtr_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xtr, N_CPUS)), 0)
         xtr_bps = xtr_bps.reshape([-1, 32, 32, 32, 3])
+        pool.close()
 
         print("converting test..")
-        xte_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xte, n_cpus)), 0)
-
-        # xte_bps = bps.encode(xte_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
-        #                      bps_cell_type='deltas')
+        pool = multiprocessing.Pool(N_CPUS)
+        xte_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xte, N_CPUS)), 0)
         xte_bps = xte_bps.reshape([-1, 32, 32, 32, 3])
+        pool.close()
+
         print("saving cache file for future runs..")
         np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)
     else:
