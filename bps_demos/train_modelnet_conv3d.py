@@ -134,7 +134,6 @@ def main():
                              bps_cell_type='deltas')
         #xte_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xte, N_CPUS)), 0)
         xte_bps = xte_bps.reshape([-1, 32, 32, 32, 3])
-        pool.close()
 
         print("saving cache file for future runs..")
         np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)
