@@ -169,8 +169,6 @@ def main():
     model = model.to(DEVICE)
 
     if torch.cuda.device_count() > 1:
-        model.cuda()
-        criterion.cuda()
         model = torch.nn.DataParallel(model)
 
     for epoch_idx in pbar:
