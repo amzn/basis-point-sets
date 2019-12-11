@@ -122,7 +122,7 @@ def main():
 
         pool = multiprocessing.Pool(N_CPUS)
         bps_encode_func = partial(bps.encode, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
-                                  bps_cell_type='deltas', verbose=0)
+                                  bps_cell_type='deltas')
 
         # xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
         #                      bps_cell_type='deltas')
