@@ -117,7 +117,7 @@ def main():
         print("converting data to BPS representation..")
         print("number of basis points: %d" % N_BPS_POINTS)
         print("BPS sampling radius: %f" % BPS_RADIUS)
-        print("using %d CPUs for BPS encoding.." % N_CPUS)
+        print("using %d available CPUs for BPS encoding.." % N_CPUS)
         print("converting train..")
 
         pool = multiprocessing.Pool(N_CPUS)
@@ -146,11 +146,11 @@ def main():
 
     xtr_bps = xtr_bps.transpose(0, 4, 2, 3, 1)
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
-    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=512, shuffle=True)
+    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=64, shuffle=True)
 
     xte_bps = xte_bps.transpose(0, 4, 2, 3, 1)
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
-    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=512, shuffle=True)
+    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=64, shuffle=True)
 
     n_bps_features = xtr_bps.shape[1]
     n_classes = 40
