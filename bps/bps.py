@@ -364,4 +364,4 @@ def encode(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cell_t
         x_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(x, n_jobs)), 0)
         pool.close()
 
-    return x_bps
+        return x_bps
