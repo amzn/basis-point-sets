@@ -121,7 +121,7 @@ def main():
         print("converting train..")
 
         pool = multiprocessing.Pool(N_CPUS)
-        bps_encode_func = partial(bps.encode, bps_arrangement='grid', n_bps_points=32 ** 3, radius=1.2,
+        bps_encode_func = partial(bps.encode, bps_arrangement='grid', n_bps_points=32**3, radius=1.2,
                                   bps_cell_type='dists')
 
         # xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
@@ -131,10 +131,9 @@ def main():
         pool.close()
 
         print("converting test..")
-        pool = multiprocessing.Pool(N_CPUS)
         xte_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xte, N_CPUS)), 0)
+        import ipdb; ipdb.set_trace()
         xte_bps = xte_bps.reshape([-1, 32, 32, 32, 3])
-        pool.close()
 
         print("saving cache file for future runs..")
         np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)
