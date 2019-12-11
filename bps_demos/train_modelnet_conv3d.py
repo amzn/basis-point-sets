@@ -125,11 +125,11 @@ def main():
                                   radius=BPS_RADIUS, bps_cell_type='deltas')
 
         print("converting train..")
-        xtr_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xtr, N_CPUS)), 0)
+        xtr_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xtr_normalized, N_CPUS)), 0)
         xtr_bps = xtr_bps.reshape([-1, 32, 32, 32, 3])
 
         print("converting test..")
-        xte_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xte, N_CPUS)), 0)
+        xte_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xte_normalized, N_CPUS)), 0)
         xte_bps = xte_bps.reshape([-1, 32, 32, 32, 3])
 
         pool.close()
