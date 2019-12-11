@@ -63,7 +63,7 @@ Clone the repository and install the dependencies:
 ```
 git clone https://github.com/amzn/basis-point-sets
 cd basis-point-sets
-python setup.py install
+pip3 install torch h5py
 ```
 
 
