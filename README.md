@@ -83,6 +83,9 @@ python bps_demos/train_modelnet_conv3d.py cuda
 ```
 - **Human body mesh registration**: _coming soon_.
 
+Visual example of the network using BPS representation for the task of mesh registration:
+
+![Teaser Image](bps_demo.png)
 
 ## Citation
 
