@@ -168,9 +168,6 @@ def main():
     print("training started..")
     model = model.to(DEVICE)
 
-    if torch.cuda.device_count() > 1:
-        model = torch.nn.DataParallel(model)
-
     for epoch_idx in pbar:
         fit(model, DEVICE, tr_loader, optimizer)
         if epoch_idx == 50:
