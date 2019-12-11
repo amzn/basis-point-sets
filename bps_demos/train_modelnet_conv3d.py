@@ -20,10 +20,11 @@ PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 
-N_CPUS = multiprocessing.cpu_count() - 1
+N_CPUS = multiprocessing.cpu_count()
 N_BPS_POINTS = 32**3
 BPS_RADIUS = 1.2
 DEVICE = sys.argv[1]  # 'cpu' or 'cuda'
+N_GPUS = torch.cuda.device_count()
 
 
 class ShapeClassifierConv3D(nn.Module):
@@ -144,11 +145,11 @@ def main():
 
     xtr_bps = xtr_bps.transpose(0, 4, 2, 3, 1)
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
-    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=2048, shuffle=True)
+    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=N_GPUS*512, shuffle=True)
 
     xte_bps = xte_bps.transpose(0, 4, 2, 3, 1)
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
-    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=2048, shuffle=True)
+    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=N_GPUS*512, shuffle=True)
 
     n_bps_features = xtr_bps.shape[1]
     n_classes = 40
@@ -166,7 +167,7 @@ def main():
     print("training started..")
     model = model.to(DEVICE)
 
-    if torch.cuda.device_count() > 1:
+    if N_GPUS > 1:
         model = torch.nn.DataParallel(model)
 
     for epoch_idx in pbar:
