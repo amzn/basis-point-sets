@@ -307,7 +307,7 @@ def encode_mp(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cel
                               x_features=x_features, custom_basis=custom_basis)
 
     pool = multiprocessing.Pool(n_jobs)
-    x_bps = np.concatenate(tqdm(pool.imap(bps_encode_func, np.array_split(x, n_jobs)), 0))
+    x_bps = np.concatenate(tqdm(pool.imap_unordered(bps_encode_func, np.array_split(x, n_jobs)), n_jobs), 0)
     pool.close()
 
     return x_bps
