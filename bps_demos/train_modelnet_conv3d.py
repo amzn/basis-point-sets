@@ -1,6 +1,8 @@
 import numpy as np
 import os
 import sys
+from functools import partial
+import multiprocessing
 
 # PyTorch dependencies
 import torch as pt
@@ -115,13 +117,23 @@ def main():
         print("number of basis points: %d" % N_BPS_POINTS)
         print("BPS sampling radius: %f" % BPS_RADIUS)
         print("converting train..")
-        xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
-                             bps_cell_type='deltas')
+
+        n_cpus = multiprocessing.cpu_count() - 1
+        pool = multiprocessing.Pool(n_cpus)
+        bps_encode_func = partial(bps.encode, bps_arrangement='grid', n_bps_points=32 ** 3, radius=1.2,
+                                  bps_cell_type='dists')
+
+        # xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
+        #                      bps_cell_type='deltas')
+        xtr_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xtr, n_cpus)), 0)
+
         xtr_bps = xtr_bps.reshape([-1, 32, 32, 32, 3])
 
         print("converting test..")
-        xte_bps = bps.encode(xte_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
-                             bps_cell_type='deltas')
+        xte_bps = np.concatenate(pool.map(bps_encode_func, np.array_split(xte, n_cpus)), 0)
+
+        # xte_bps = bps.encode(xte_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
+        #                      bps_cell_type='deltas')
         xte_bps = xte_bps.reshape([-1, 32, 32, 32, 3])
         print("saving cache file for future runs..")
         np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)
