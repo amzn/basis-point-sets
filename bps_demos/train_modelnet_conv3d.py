@@ -117,12 +117,12 @@ def main():
         print("converting data to BPS representation..")
         print("number of basis points: %d" % N_BPS_POINTS)
         print("BPS sampling radius: %f" % BPS_RADIUS)
-        print("using %d for BPS encoding.." % N_CPUS)
+        print("using %d CPUs for BPS encoding.." % N_CPUS)
         print("converting train..")
 
         pool = multiprocessing.Pool(N_CPUS)
-        bps_encode_func = partial(bps.encode, bps_arrangement='grid', n_bps_points=32**3, radius=1.2,
-                                  bps_cell_type='dists')
+        bps_encode_func = partial(bps.encode, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
+                                  bps_cell_type='deltas')
 
         # xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS, radius=BPS_RADIUS,
         #                      bps_cell_type='deltas')
