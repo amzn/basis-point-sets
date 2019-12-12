@@ -120,7 +120,7 @@ def prepare_data():
         print("converting data to BPS representation..")
         print("number of basis points: %d" % N_BPS_POINTS)
         print("BPS sampling radius: %f" % BPS_RADIUS)
-        print("using %d available CPUs for BPS encoding.." % N_CPUS)
+
 
         print("converting train..")
         xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS,

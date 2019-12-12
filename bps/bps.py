@@ -270,7 +270,7 @@ def encode(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cell_t
     else:
 
         if verbose:
-            print("using %d CPUs for encoding.." % n_jobs)
+            print("using %d available CPUs for BPS encoding.." % n_jobs)
 
         bps_encode_func = partial(encode, bps_arrangement=bps_arrangement, n_bps_points=n_bps_points, radius=radius,
                                   bps_cell_type=bps_cell_type, verbose=verbose, random_seed=random_seed,
