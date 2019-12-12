@@ -105,7 +105,7 @@ def test(model, device, test_loader, epoch_id):
     return test_loss, test_acc
 
 
-def prepare_data():
+def prepare_data_loaders():
 
     if not os.path.exists(BPS_CACHE_FILE):
         # load modelnet point clouds
@@ -120,7 +120,6 @@ def prepare_data():
         print("converting data to BPS representation..")
         print("number of basis points: %d" % N_BPS_POINTS)
         print("BPS sampling radius: %f" % BPS_RADIUS)
-
 
         print("converting train..")
         xtr_bps = bps.encode(xtr_normalized, bps_arrangement='grid', n_bps_points=N_BPS_POINTS,
@@ -157,7 +156,7 @@ def prepare_data():
 
 def main():
 
-    tr_loader, te_loader = prepare_data()
+    tr_loader, te_loader = prepare_data_loaders()
 
     n_bps_features = tr_loader.dataset[0][0].shape[0]
 
@@ -183,7 +182,7 @@ def main():
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
-        if epoch_idx == 250:
+        if epoch_idx == 450:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-5..")
                 param_group['lr'] = 1e-5
