@@ -158,7 +158,7 @@ def main():
 
     tr_loader, te_loader = prepare_data()
 
-    n_bps_features = tr_loader.dataset[0].shape[1]
+    n_bps_features = tr_loader.dataset[0][0].shape[1]
 
     print("defining the model..")
     model = ShapeClassifierConv3D(n_features=n_bps_features, n_classes=N_MODELNET_CLASSES)
