@@ -135,6 +135,7 @@ def prepare_data():
 
         print("saving cache file for future runs..")
         np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)
+
     else:
         print("loading converted data from cache..")
         data = np.load(BPS_CACHE_FILE)
@@ -159,6 +160,7 @@ def main():
     tr_loader, te_loader = prepare_data()
 
     n_bps_features = tr_loader.dataset[0][0].shape[1]
+    import ipdb; ipdb.set_trace()
 
     print("defining the model..")
     model = ShapeClassifierConv3D(n_features=n_bps_features, n_classes=N_MODELNET_CLASSES)
