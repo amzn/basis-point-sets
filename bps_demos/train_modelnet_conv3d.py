@@ -3,6 +3,7 @@ import os
 import sys
 from functools import partial
 import multiprocessing
+import time
 
 # PyTorch dependencies
 import torch as pt
@@ -20,6 +21,7 @@ PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 
+N_MODELNET_CLASSES = 40
 N_CPUS = multiprocessing.cpu_count()
 N_BPS_POINTS = 32**3
 BPS_RADIUS = 1.2
@@ -103,7 +105,7 @@ def test(model, device, test_loader, epoch_id):
     return test_loss, test_acc
 
 
-def main():
+def prepare_data():
 
     if not os.path.exists(BPS_CACHE_FILE):
         # load modelnet point clouds
@@ -149,11 +151,17 @@ def main():
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
     te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=512, shuffle=True)
 
-    n_bps_features = xtr_bps.shape[1]
-    n_classes = 40
+    return tr_loader, te_loader
+
+
+def main():
+
+    tr_loader, te_loader = prepare_data()
+
+    n_bps_features = tr_loader.dataset[0].shape[1]
 
     print("defining the model..")
-    model = ShapeClassifierConv3D(n_features=n_bps_features, n_classes=n_classes)
+    model = ShapeClassifierConv3D(n_features=n_bps_features, n_classes=N_MODELNET_CLASSES)
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
