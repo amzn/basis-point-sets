@@ -145,11 +145,11 @@ def prepare_data_loaders():
 
     xtr_bps = xtr_bps.transpose(0, 4, 2, 3, 1)
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
-    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=128, shuffle=True)
+    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=64, shuffle=True)
 
     xte_bps = xte_bps.transpose(0, 4, 2, 3, 1)
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
-    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=128, shuffle=True)
+    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=64, shuffle=True)
 
     return tr_loader, te_loader
 
@@ -165,7 +165,7 @@ def main():
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
-    n_epochs = 500
+    n_epochs = 900
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
@@ -178,15 +178,11 @@ def main():
 
     for epoch_idx in pbar:
         fit(model, DEVICE, tr_loader, optimizer)
-        if epoch_idx == 100:
+        if epoch_idx == 700:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
-        if epoch_idx == 400:
-            for param_group in optimizer.param_groups:
-                print("decreasing the learning rate to 1e-5..")
-                param_group['lr'] = 1e-5
-        if epoch_idx % 10 == 0:
+        if epoch_idx % 1 == 0:
             test_loss, test_acc = test(model, DEVICE, te_loader, epoch_idx)
             test_accs.append(test_acc)
             test_losses.append(test_loss)
