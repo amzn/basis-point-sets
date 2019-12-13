@@ -18,9 +18,20 @@ PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_mlp_data.npz')
 
+N_MODELNET_CLASSES = 40
+
 N_BPS_POINTS = 512
 BPS_RADIUS = 1.7
-DEVICE = sys.argv[1]  # 'cpu' or 'cuda'
+
+N_CPUS = multiprocessing.cpu_count()
+N_GPUS = torch.cuda.device_count()
+
+if N_GPUS > 0:
+    DEVICE = 'cuda'
+    print("using %d found GPUs..." % N_GPUS)
+else:
+    DEVICE = 'cpu'
+    print("using %d found CPUs..." % N_CPUS)
 
 
 class ShapeClassifierMLP(nn.Module):
@@ -77,8 +88,7 @@ def test(model, device, test_loader, epoch_id):
 
     return test_loss, test_acc
 
-
-def main():
+def prepaere_data_loaders():
 
     if not os.path.exists(BPS_CACHE_FILE):
         # load modelnet point clouds
@@ -108,16 +118,24 @@ def main():
         yte = data['yte']
 
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
-    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=512, shuffle=True)
+    train_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=512, shuffle=True)
 
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
-    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=512, shuffle=True)
+    test_loader = pt.utils.data.DataLoader(dataset_te, batch_size=512, shuffle=True)
 
-    n_bps_features = xtr_bps.shape[1]
-    n_classes = 40
+    return train_loader, test_loader
+
+
+def main():
+
+    train_loader, test_loader = prepaere_data_loaders()
+
+    n_bps_features = train_loader.dataset[0][0].shape[0]
 
     print("defining the model..")
-    model = ShapeClassifierMLP(n_features=n_bps_features, n_classes=n_classes)
+    model = ShapeClassifierMLP(n_features=n_bps_features, n_classes=N_MODELNET_CLASSES)
+    if N_GPUS > 1:
+        model = torch.nn.DataParallel(model)
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
@@ -130,17 +148,17 @@ def main():
     model = model.to(DEVICE)
 
     for epoch_idx in pbar:
-        fit(model, DEVICE, tr_loader, optimizer)
+        fit(model, DEVICE, train_loader, optimizer)
         if epoch_idx == 700:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
         if epoch_idx % 10 == 0:
-            test_loss, test_acc = test(model, DEVICE, te_loader, epoch_idx)
+            test_loss, test_acc = test(model, DEVICE, test_loader, epoch_idx)
             test_accs.append(test_acc)
             test_losses.append(test_loss)
 
-    _, test_acc = test(model, DEVICE, te_loader, n_epochs)
+    _, test_acc = test(model, DEVICE, test_loader, n_epochs)
     print("finished. test accuracy: %f " % test_acc)
     return
 

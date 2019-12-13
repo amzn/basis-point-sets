@@ -22,11 +22,19 @@ DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 
 N_MODELNET_CLASSES = 40
-N_CPUS = multiprocessing.cpu_count()
+
 N_BPS_POINTS = 32**3
 BPS_RADIUS = 1.2
-DEVICE = sys.argv[1]  # 'cpu' or 'cuda'
+
+N_CPUS = multiprocessing.cpu_count()
 N_GPUS = torch.cuda.device_count()
+
+if N_GPUS > 0:
+    DEVICE = 'cuda'
+    print("using %d found GPUs..." % N_GPUS)
+else:
+    DEVICE = 'cpu'
+    print("using %d found CPUs, might be slow.." % N_CPUS)
 
 
 class ShapeClassifierConv3D(nn.Module):
@@ -46,14 +54,24 @@ class ShapeClassifierConv3D(nn.Module):
         self.bn22 = nn.BatchNorm3d(64)
         self.mp2 = nn.MaxPool3d(kernel_size=(2, 2, 2))
 
+        # self.do1 = nn.Dropout(0.8)
+        # self.fc1 = nn.Linear(in_features=8000, out_features=2048)
+        # self.bn1 = nn.BatchNorm1d(2048)
+        # self.do2 = nn.Dropout(0.8)
+        # self.fc2 = nn.Linear(in_features=2048, out_features=512)
+        # self.bn2 = nn.BatchNorm1d(512)
+        # self.do3 = nn.Dropout(0.8)
+        # self.fc3 = nn.Linear(in_features=512, out_features=n_classes)
+
         self.do1 = nn.Dropout(0.8)
         self.fc1 = nn.Linear(in_features=8000, out_features=2048)
-        self.bn1 = nn.BatchNorm1d(2048)
+        self.bn1 = nn.BatchNorm1d(512)
         self.do2 = nn.Dropout(0.8)
-        self.fc2 = nn.Linear(in_features=2048, out_features=512)
+        self.fc2 = nn.Linear(in_features=512, out_features=512)
         self.bn2 = nn.BatchNorm1d(512)
         self.do3 = nn.Dropout(0.8)
         self.fc3 = nn.Linear(in_features=512, out_features=n_classes)
+
 
     def forward(self, x):
         x = self.bn11(F.relu(self.conv11(x)))
@@ -162,6 +180,8 @@ def main():
 
     print("defining the model..")
     model = ShapeClassifierConv3D(n_features=n_bps_features, n_classes=N_MODELNET_CLASSES)
+    if N_GPUS > 1:
+        model = torch.nn.DataParallel(model)
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
@@ -172,9 +192,6 @@ def main():
 
     print("training started..")
     model = model.to(DEVICE)
-
-    if N_GPUS > 1:
-        model = torch.nn.DataParallel(model)
 
     for epoch_idx in pbar:
         fit(model, DEVICE, tr_loader, optimizer)
