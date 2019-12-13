@@ -19,6 +19,7 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 DATA_PATH = os.path.join(PROJECT_DIR, 'data')
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_mlp_data.npz')
+LOGS_PATH = os.path.join(PROJECT_DIR, 'logs')
 
 N_MODELNET_CLASSES = 40
 
@@ -34,6 +35,9 @@ if N_GPUS > 0:
 else:
     DEVICE = 'cpu'
     print("using %d found CPU(s)..." % N_CPUS)
+
+if not os.path.exists(LOGS_PATH):
+    os.makedirs(LOGS_PATH)
 
 
 class ShapeClassifierMLP(nn.Module):
@@ -145,7 +149,7 @@ def main():
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
-    n_epochs = 800
+    n_epochs = 1
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
