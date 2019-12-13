@@ -108,6 +108,7 @@ def prepare_data_loaders():
 
         # this will encode your normalised point clouds with random basis of 512 points,
         # each BPS cell containing l2-distance to closest point
+        start = time.time()
         print("converting data to BPS representation..")
         print("number of basis points: %d" % N_BPS_POINTS)
         print("BPS sampling radius: %f" % BPS_RADIUS)
@@ -115,6 +116,9 @@ def prepare_data_loaders():
         xtr_bps = bps.encode(xtr_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
         print("converting test..")
         xte_bps = bps.encode(xte_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
+        end = time.time()
+        total_training_time = (end - start) / 60
+        print("conversion finished. ")
         print("saving cache file for future runs..")
 
         np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)

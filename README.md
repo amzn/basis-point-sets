@@ -80,7 +80,7 @@ Check one of the provided examples:
 python bps_demos/train_modelnet_mlp.py
 ```
 
-- **ModelNet40 3D shape classification with BPS-Conv3D** (~92.3% accuracy, ~120 minutes of training on Nvidia V100 16gb):
+- **ModelNet40 3D shape classification with BPS-Conv3D** (~92% accuracy, ~120 minutes of training on Nvidia V100 16gb):
 
 ```
 python bps_demos/train_modelnet_conv3d.py
