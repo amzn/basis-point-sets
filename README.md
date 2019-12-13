@@ -10,8 +10,10 @@ points in the point cloud; use these vectors (or simply their norms) as features
 
 The basis points are kept fixed for all the point clouds in the dataset, providing a fixed representation of every 
 point cloud as a vector. This representation can then be used  as input to arbitrary machine learning methods, in 
-particular it can be used as input to off-the-shelf neural networks. 
+particular it can be used as input to off-the-shelf neural networks.  Example of the model for the task of mesh 
+registration over a noisy scan:
 
+![Teaser Image](bps_demo.png)
 
  Check our [ICCV 2019 paper](https://arxiv.org/abs/1908.09186) for more 
  details.
@@ -82,10 +84,6 @@ python bps_demos/train_modelnet_conv3d.py
 ```
 
 - **Human body mesh registration**: _coming soon_.
-
-Exemplar model for the task of mesh registration over a noisy scan:
-
-![Teaser Image](bps_demo.png)
 
 
 ## Citation
