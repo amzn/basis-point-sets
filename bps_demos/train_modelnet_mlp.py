@@ -55,6 +55,7 @@ class ShapeClassifierMLP(nn.Module):
         self.fc3 = nn.Linear(in_features=hsize2, out_features=n_classes)
 
     def forward(self, x):
+
         x = self.bn0(x)
         x = self.do1(self.bn1(F.relu(self.fc1(x))))
         x = self.do2(self.bn2(F.relu(self.fc2(x))))
