@@ -68,19 +68,24 @@ pip3 install torch h5py
 
 Check one of the provided examples:
 
-- **ModelNet40 3D shape classification with BPS-MLP** (~89% accuracy, ~20 mins of training on a non-GPU MacBook Pro, ~):
+- **ModelNet40 3D shape classification with BPS-MLP** (~89% accuracy, ~20 minutes of training on a non-GPU MacBook Pro, 
+~2 minutes of training on Nvidia V100 16gb):
+
 ```
-python bps_demos/train_modelnet_mlp.py cpu
+python bps_demos/train_modelnet_mlp.py
 ```
-same with a GPU, ~2 minutes of training:
+
+- **ModelNet40 3D shape classification with BPS-Conv3D** (~92.3% accuracy, ~60 minutes of training on Nvidia V100 16gb):
+
 ```
-python bps_demos/train_modelnet_mlp.py cuda
+python bps_demos/train_modelnet_conv3d.py
 ```
-- **ModelNet40 3D shape classification with BPS-Conv3D**:
-```
-python bps_demos/train_modelnet_conv3d.py cuda
-```
+
 - **Human body mesh registration**: _coming soon_.
+
+Exemplar model for the task of mesh registration over a noisy scan:
+
+![Teaser Image](bps_demo.png)
 
 
 ## Citation
