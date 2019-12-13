@@ -36,7 +36,7 @@ if N_GPUS > 0:
     print("GPU device found...")
 else:
     DEVICE = 'cpu'
-    print("using CPUs, might be slow..." % N_CPUS)
+    print("GPU device not found, using CPU(s), might be slow..." % N_CPUS)
 
 if not os.path.exists(LOGS_PATH):
     os.makedirs(LOGS_PATH)
@@ -207,12 +207,9 @@ def main():
     print("Training finished. Test accuracy: %f . Total training time: %f minutes." % (test_acc, total_training_time))
     ckpt_path = os.path.join(LOGS_PATH, 'bps_conv3d_model.h5')
 
-    if N_GPUS > 1:
-        pt.save(model.module.state_dict(), ckpt_path)
-    else:
-        pt.save(model.state_dict(), ckpt_path)
-
+    pt.save(model.state_dict(), ckpt_path)
     print("Model saved: %s" % ckpt_path)
+
     return
 
 

@@ -34,7 +34,7 @@ if N_GPUS > 0:
     print("GPU device found...")
 else:
     DEVICE = 'cpu'
-    print("using %d found CPU(s)..." % N_CPUS)
+    print("GPU device not found, using CPU(s)..." % N_CPUS)
 
 if not os.path.exists(LOGS_PATH):
     os.makedirs(LOGS_PATH)
