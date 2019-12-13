@@ -30,10 +30,10 @@ N_GPUS = torch.cuda.device_count()
 
 if N_GPUS > 0:
     DEVICE = 'cuda'
-    print("using %d found GPUs..." % N_GPUS)
+    print("using %d found GPU(s)..." % N_GPUS)
 else:
     DEVICE = 'cpu'
-    print("using %d found CPUs..." % N_CPUS)
+    print("using %d found CPU(s)..." % N_CPUS)
 
 
 class ShapeClassifierMLP(nn.Module):
@@ -145,7 +145,7 @@ def main():
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
-    n_epochs = 900
+    n_epochs = 800
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
@@ -166,7 +166,7 @@ def main():
             test_accs.append(test_acc)
             test_losses.append(test_loss)
 
-    _, test_acc = test(model, DEVICE, te_loader, n_epochs)
+    _, test_acc = test(model, DEVICE, test_loader, n_epochs)
 
     end = time.time()
     total_training_time = (end - start) / 60

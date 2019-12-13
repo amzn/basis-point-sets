@@ -178,9 +178,9 @@ def prepare_data_loaders():
 
 def main():
 
-    tr_loader, te_loader = prepare_data_loaders()
+    train_loader, test_loader = prepare_data_loaders()
 
-    n_bps_features = tr_loader.dataset[0][0].shape[0]
+    n_bps_features = train_loader.dataset[0][0].shape[0]
 
     print("defining the model..")
     model = ShapeClassifierConv3D(n_features=n_bps_features, n_classes=N_MODELNET_CLASSES)
@@ -199,17 +199,17 @@ def main():
 
     start = time.time()
     for epoch_idx in pbar:
-        fit(model, DEVICE, tr_loader, optimizer)
+        fit(model, DEVICE, train_loader, optimizer)
         if epoch_idx == 300:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
         if epoch_idx % 1 == 0:
-            test_loss, test_acc = test(model, DEVICE, te_loader, epoch_idx)
+            test_loss, test_acc = test(model, DEVICE, test_loader, epoch_idx)
             test_accs.append(test_acc)
             test_losses.append(test_loss)
 
-    _, test_acc = test(model, DEVICE, te_loader, n_epochs)
+    _, test_acc = test(model, DEVICE, test_loader, n_epochs)
 
     end = time.time()
     total_training_time = (end - start) / 60
