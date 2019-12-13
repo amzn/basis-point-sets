@@ -12,7 +12,8 @@ The basis points are kept fixed for all the point clouds in the dataset, providi
 point cloud as a vector. This representation can then be used  as input to arbitrary machine learning methods, in 
 particular it can be used as input to off-the-shelf neural networks. 
 
-Below is the xxample of a simple model using  BPS for the  task of mesh registration over a noisy scan:
+Below is the example of a simple model using  BPS features as input for the  task of mesh registration over a 
+noisy scan:
 
 ![Teaser Image](bps_demo.png)
 
