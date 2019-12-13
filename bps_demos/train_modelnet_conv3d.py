@@ -19,6 +19,8 @@ from modelnet40 import load_modelnet40
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 DATA_PATH = os.path.join(PROJECT_DIR, 'data')
+LOGS_PATH = os.path.join(PROJECT_DIR, 'logs')
+
 BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 
 N_MODELNET_CLASSES = 40
@@ -35,6 +37,9 @@ if N_GPUS > 0:
 else:
     DEVICE = 'cpu'
     print("using %d found CPUs, might be slow.." % N_CPUS)
+
+if not os.path.exists(LOGS_PATH):
+    os.makedirs(LOGS_PATH)
 
 
 class ShapeClassifierConv3D(nn.Module):
@@ -193,6 +198,7 @@ def main():
     print("training started..")
     model = model.to(DEVICE)
 
+    start = time.time()
     for epoch_idx in pbar:
         fit(model, DEVICE, tr_loader, optimizer)
         if epoch_idx == 300:
@@ -205,7 +211,19 @@ def main():
             test_losses.append(test_loss)
 
     _, test_acc = test(model, DEVICE, te_loader, n_epochs)
-    print("finished. test accuracy: %f " % test_acc)
+
+    end = time.time()
+    total_training_time = (end - start) / 60
+
+    print("Training finished. Test accuracy: %f . Total training time: %f minutes." % (test_acc, total_training_time))
+    ckpt_path = os.path.join(LOGS_PATH, 'bps_conv3d_model.h5')
+
+    if N_GPUS > 1:
+        pt.save(unet.module.state_dict(), ckpt_path)
+    else:
+        pt.save(unet.state_dict(), ckpt_path)
+
+    print("Model saved: %s" % ckpt_path)
     return
 
 

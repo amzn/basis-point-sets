@@ -88,9 +88,11 @@ def test(model, device, test_loader, epoch_id):
 
     return test_loss, test_acc
 
-def prepaere_data_loaders():
+
+def prepare_data_loaders():
 
     if not os.path.exists(BPS_CACHE_FILE):
+
         # load modelnet point clouds
         xtr, ytr, xte, yte = load_modelnet40(root_data_dir=DATA_PATH)
 
@@ -108,7 +110,9 @@ def prepaere_data_loaders():
         print("converting test..")
         xte_bps = bps.encode(xte_normalized, n_bps_points=N_BPS_POINTS, bps_cell_type='dists', radius=BPS_RADIUS)
         print("saving cache file for future runs..")
+
         np.savez(BPS_CACHE_FILE, xtr=xtr_bps, ytr=ytr, xte=xte_bps, yte=yte)
+
     else:
         print("loading converted data from cache..")
         data = np.load(BPS_CACHE_FILE)
@@ -128,7 +132,7 @@ def prepaere_data_loaders():
 
 def main():
 
-    train_loader, test_loader = prepaere_data_loaders()
+    train_loader, test_loader = prepare_data_loaders()
 
     n_bps_features = train_loader.dataset[0][0].shape[0]
 
@@ -147,6 +151,8 @@ def main():
     print("training started..")
     model = model.to(DEVICE)
 
+    start = time.time()
+
     for epoch_idx in pbar:
         fit(model, DEVICE, train_loader, optimizer)
         if epoch_idx == 700:
@@ -158,8 +164,21 @@ def main():
             test_accs.append(test_acc)
             test_losses.append(test_loss)
 
-    _, test_acc = test(model, DEVICE, test_loader, n_epochs)
-    print("finished. test accuracy: %f " % test_acc)
+    _, test_acc = test(model, DEVICE, te_loader, n_epochs)
+
+    end = time.time()
+    total_training_time = (end - start) / 60
+
+    print("Training finished. Test accuracy: %f . Total training time: %f minutes." % (test_acc, total_training_time))
+    ckpt_path = os.path.join(LOGS_PATH, 'bps_conv3d_model.h5')
+
+    if N_GPUS > 1:
+        pt.save(unet.module.state_dict(), ckpt_path)
+    else:
+        pt.save(unet.state_dict(), ckpt_path)
+
+    print("Model saved: %s" % ckpt_path)
+
     return
 
 
