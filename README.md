@@ -24,7 +24,7 @@ noisy scan:
  
 ### Requirements
 
-- Python 3.7
+- Python >= 3.7
 - scikit-learn >= 0.21
 - PyTorch >= 1.3 (for running provided demos)
 
