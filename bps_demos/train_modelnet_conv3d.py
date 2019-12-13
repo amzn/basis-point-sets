@@ -33,10 +33,10 @@ N_GPUS = torch.cuda.device_count()
 
 if N_GPUS > 0:
     DEVICE = 'cuda'
-    print("using %d found GPUs..." % N_GPUS)
+    print("GPU device found...")
 else:
     DEVICE = 'cpu'
-    print("using %d found CPUs, might be slow.." % N_CPUS)
+    print("using CPUs, might be slow..." % N_CPUS)
 
 if not os.path.exists(LOGS_PATH):
     os.makedirs(LOGS_PATH)
@@ -159,11 +159,11 @@ def prepare_data_loaders():
 
     xtr_bps = xtr_bps.transpose(0, 4, 2, 3, 1)
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
-    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=64*N_GPUS, shuffle=True)
+    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=64, shuffle=True)
 
     xte_bps = xte_bps.transpose(0, 4, 2, 3, 1)
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
-    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=64*N_GPUS, shuffle=True)
+    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=64, shuffle=True)
 
     return tr_loader, te_loader
 
@@ -186,8 +186,6 @@ def main():
 
     print("training started..")
     model = model.to(DEVICE)
-    if N_GPUS > 1:
-        model = torch.nn.DataParallel(model)
 
     start = time.time()
     for epoch_idx in pbar:
