@@ -218,9 +218,9 @@ def main():
     ckpt_path = os.path.join(LOGS_PATH, 'bps_conv3d_model.h5')
 
     if N_GPUS > 1:
-        pt.save(unet.module.state_dict(), ckpt_path)
+        pt.save(model.module.state_dict(), ckpt_path)
     else:
-        pt.save(unet.state_dict(), ckpt_path)
+        pt.save(model.state_dict(), ckpt_path)
 
     print("Model saved: %s" % ckpt_path)
     return
