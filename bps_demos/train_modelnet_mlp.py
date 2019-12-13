@@ -31,7 +31,7 @@ N_GPUS = torch.cuda.device_count()
 
 if N_GPUS > 0:
     DEVICE = 'cuda'
-    print("using %d found GPU(s)..." % N_GPUS)
+    print("GPU device found...")
 else:
     DEVICE = 'cpu'
     print("using %d found CPU(s)..." % N_CPUS)
@@ -148,8 +148,6 @@ def main():
 
     print("defining the model..")
     model = ShapeClassifierMLP(n_features=n_bps_features, n_classes=N_MODELNET_CLASSES)
-    # if N_GPUS > 1:
-    #     model = torch.nn.DataParallel(model)
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
