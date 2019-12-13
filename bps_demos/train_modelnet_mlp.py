@@ -178,7 +178,7 @@ def main():
     total_training_time = (end - start) / 60
 
     print("Training finished. Test accuracy: %f . Total training time: %f minutes." % (test_acc, total_training_time))
-    ckpt_path = os.path.join(LOGS_PATH, 'bps_conv3d_model.h5')
+    ckpt_path = os.path.join(LOGS_PATH, 'bps_mlp_model.h5')
 
     pt.save(model.state_dict(), ckpt_path)
 
