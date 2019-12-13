@@ -77,7 +77,6 @@ class ShapeClassifierConv3D(nn.Module):
         self.do3 = nn.Dropout(0.8)
         self.fc3 = nn.Linear(in_features=512, out_features=n_classes)
 
-
     def forward(self, x):
         x = self.bn11(F.relu(self.conv11(x)))
         x = self.bn12(F.relu(self.conv12(x)))
