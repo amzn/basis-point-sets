@@ -190,10 +190,14 @@ def main():
     start = time.time()
     for epoch_idx in pbar:
         fit(model, DEVICE, train_loader, optimizer)
-        if epoch_idx == 900:
+        if epoch_idx == 100:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
+        if epoch_idx == 1000:
+            for param_group in optimizer.param_groups:
+                print("decreasing the learning rate to 1e-4..")
+                param_group['lr'] = 1e-5
         if epoch_idx % 10 == 0:
             test_loss, test_acc = test(model, DEVICE, test_loader, epoch_idx)
             test_accs.append(test_acc)
