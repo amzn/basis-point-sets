@@ -26,7 +26,7 @@ BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 N_MODELNET_CLASSES = 40
 
 N_BPS_POINTS = 32**3
-BPS_RADIUS = 1.2
+BPS_RADIUS = 1.7
 
 N_CPUS = multiprocessing.cpu_count()
 N_GPUS = torch.cuda.device_count()
