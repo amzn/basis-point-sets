@@ -26,7 +26,7 @@ BPS_CACHE_FILE = os.path.join(DATA_PATH, 'bps_conv3d_data.npz')
 N_MODELNET_CLASSES = 40
 
 N_BPS_POINTS = 32**3
-BPS_RADIUS = 1.7
+BPS_RADIUS = 1.2
 
 N_CPUS = multiprocessing.cpu_count()
 N_GPUS = torch.cuda.device_count()
@@ -190,7 +190,7 @@ def main():
     start = time.time()
     for epoch_idx in pbar:
         fit(model, DEVICE, train_loader, optimizer)
-        if epoch_idx == 900:
+        if epoch_idx == 1000:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
