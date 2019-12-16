@@ -23,8 +23,7 @@ LOGS_PATH = os.path.join(PROJECT_DIR, 'logs')
 
 N_MODELNET_CLASSES = 40
 
-N_BPS_POINTS = 512
-BPS_RADIUS = 1.7
+BPS_RADIUS = 1.2
 
 N_CPUS = multiprocessing.cpu_count()
 N_GPUS = torch.cuda.device_count()
@@ -133,10 +132,10 @@ def prepare_data_loaders():
         yte = data['yte']
 
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
-    train_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=512, shuffle=True)
+    train_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=128, shuffle=True)
 
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
-    test_loader = pt.utils.data.DataLoader(dataset_te, batch_size=512, shuffle=True)
+    test_loader = pt.utils.data.DataLoader(dataset_te, batch_size=128, shuffle=True)
 
     return train_loader, test_loader
 
