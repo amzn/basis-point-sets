@@ -196,7 +196,7 @@ def main():
                 param_group['lr'] = 1e-4
         if epoch_idx == 350:
             for param_group in optimizer.param_groups:
-                print("decreasing the learning rate to 1e-4..")
+                print("decreasing the learning rate to 1e-5..")
                 param_group['lr'] = 1e-5
         if epoch_idx % 10 == 0:
             test_loss, test_acc = test(model, DEVICE, test_loader, epoch_idx)
