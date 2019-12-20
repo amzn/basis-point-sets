@@ -179,7 +179,7 @@ def main():
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
-    n_epochs = 450
+    n_epochs = 500
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
@@ -190,14 +190,10 @@ def main():
     start = time.time()
     for epoch_idx in pbar:
         fit(model, DEVICE, train_loader, optimizer)
-        if epoch_idx == 300:
+        if epoch_idx == 100:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
-        if epoch_idx == 400:
-            for param_group in optimizer.param_groups:
-                print("decreasing the learning rate to 1e-5..")
-                param_group['lr'] = 1e-5
         if epoch_idx % 10 == 0:
             test_loss, test_acc = test(model, DEVICE, test_loader, epoch_idx)
             test_accs.append(test_acc)
