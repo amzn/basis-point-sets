@@ -34,6 +34,7 @@ N_GPUS = torch.cuda.device_count()
 if N_GPUS > 0:
     DEVICE = 'cuda'
     print("GPU device found...")
+    print("usin %d GPUs" % N_GPUS)
 else:
     DEVICE = 'cpu'
     print("GPU device not found, using CPU(s), might be slow..." % N_CPUS)
