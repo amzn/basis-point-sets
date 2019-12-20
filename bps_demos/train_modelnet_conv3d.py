@@ -196,7 +196,7 @@ def main():
                 param_group['lr'] = 1e-4
         elif epoch_idx % 20 == 0:
             for param_group in optimizer.param_groups:
-                print("decreasing the learning rate to 1e-4..")
+                print("increasing the learning rate to 1e-3..")
                 param_group['lr'] = 1e-3
             # print("restarting the optimizer with a learning rate to 1e-5..")
             # optimizer = pt.optim.Adam(model.parameters(), lr=1e-4)
