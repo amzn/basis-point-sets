@@ -160,11 +160,11 @@ def prepare_data_loaders():
 
     xtr_bps = xtr_bps.transpose(0, 4, 2, 3, 1)
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
-    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=64, shuffle=True, num_workers=N_GPUS)
+    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=1024, shuffle=True, num_workers=N_GPUS)
 
     xte_bps = xte_bps.transpose(0, 4, 2, 3, 1)
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
-    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=64, shuffle=True, num_workers=N_GPUS)
+    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=1024, shuffle=True, num_workers=N_GPUS)
 
     return tr_loader, te_loader
 
