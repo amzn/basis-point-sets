@@ -34,7 +34,6 @@ N_GPUS = torch.cuda.device_count()
 if N_GPUS > 0:
     DEVICE = 'cuda'
     print("GPU device found...")
-    print("usin %d GPUs" % N_GPUS)
 else:
     DEVICE = 'cpu'
     print("GPU device not found, using CPU(s), might be slow..." % N_CPUS)
@@ -160,11 +159,11 @@ def prepare_data_loaders():
 
     xtr_bps = xtr_bps.transpose(0, 4, 2, 3, 1)
     dataset_tr = pt.utils.data.TensorDataset(pt.Tensor(xtr_bps), pt.Tensor(ytr[:, 0]).long())
-    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=1024, shuffle=True, num_workers=N_GPUS)
+    tr_loader = pt.utils.data.DataLoader(dataset_tr, batch_size=64, shuffle=True)
 
     xte_bps = xte_bps.transpose(0, 4, 2, 3, 1)
     dataset_te = pt.utils.data.TensorDataset(pt.Tensor(xte_bps), pt.Tensor(yte[:, 0]).long())
-    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=1024, shuffle=True, num_workers=N_GPUS)
+    te_loader = pt.utils.data.DataLoader(dataset_te, batch_size=64, shuffle=True)
 
     return tr_loader, te_loader
 
@@ -180,16 +179,13 @@ def main():
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
-    n_epochs = 120
+    n_epochs = 150
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
 
     print("training started..")
     model = model.to(DEVICE)
-
-    if N_GPUS > 1:
-        model = torch.nn.DataParallel(model)
 
     start = time.time()
     for epoch_idx in pbar:
@@ -198,10 +194,9 @@ def main():
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
-        if epoch_idx == 110:
-            for param_group in optimizer.param_groups:
-                print("decreasing the learning rate to 1e-5..")
-                param_group['lr'] = 1e-5
+        if epoch_idx == 120:
+            print("restarting the optimizer with a learning rate to 1e-5..")
+            optimizer = pt.optim.Adam(model.parameters(), lr=1e-4)
         if epoch_idx % 10 == 0:
             test_loss, test_acc = test(model, DEVICE, test_loader, epoch_idx)
             test_accs.append(test_acc)
