@@ -187,6 +187,9 @@ def main():
     print("training started..")
     model = model.to(DEVICE)
 
+    if N_GPUS > 1:
+        model = torch.nn.DataParallel(model)
+
     start = time.time()
     for epoch_idx in pbar:
         fit(model, DEVICE, train_loader, optimizer)
