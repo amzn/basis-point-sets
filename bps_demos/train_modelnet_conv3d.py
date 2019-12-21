@@ -79,8 +79,8 @@ class ShapeClassifierConv3D(nn.Module):
         x = self.mp2(x)
 
         x = self.do1(x.reshape([-1, 8000]))
-        x = self.do1(self.bn1(F.relu(self.fc1(x))))
-        x = self.do3(self.bn2(F.relu(self.fc2(x))))
+        x = self.do2(self.bn1(F.relu(self.fc1(x))))
+        #x = self.do3(self.bn2(F.relu(self.fc2(x))))
 
         x = self.fc3(x)
 
