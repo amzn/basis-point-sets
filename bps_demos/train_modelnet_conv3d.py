@@ -178,7 +178,7 @@ def main():
     model = ShapeClassifierConv3D(n_features=n_bps_features, n_classes=N_MODELNET_CLASSES)
 
     #optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
-    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    optimizer = pt.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
     n_epochs = 1100
     pbar = range(0, n_epochs)
