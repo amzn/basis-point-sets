@@ -35,6 +35,7 @@ challenge.
 
 - Python >= 3.7
 - scikit-learn >= 0.21
+- tqdm >= 4.3
 - PyTorch >= 1.3 (for running provided demos)
 
 ### Installation
