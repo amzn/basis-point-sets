@@ -22,9 +22,9 @@ noisy scan:
 - continuous global information instead of simple binary flags or local distances in the cells;
 - smaller number of cells in order to represent shape accurately;
 - cell arrangements different from a standard rectangular grid;
-- significant improvement in performance: *simply substituting occupancy voxels with  BPS directional vectors results 
+- significant improvement in performance: simply substituting occupancy voxels with  BPS directional vectors results 
 in +9% accuracy improvement of a VoxNet-like Conv3D network on a ModelNet40 classification 
-challenge*,  exceeding performance of the PointNet\PointNet++ frameworks while having an order of magnitude 
+challenge,  exceeding performance of the PointNet\PointNet++ frameworks while having an order of magnitude 
 less floating point operations.
 
  Check our [ICCV 2019 paper](https://arxiv.org/abs/1908.09186) for more 
