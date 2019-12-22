@@ -20,8 +20,8 @@ noisy scan:
 **FAQ**: what are the key differences between standard occupancy voxels, TSDF and the proposed BPS representation?
 
 - continuous global information instead of simple binary flags or local distances in the cells;
-- smaller number of cells in order to represent shape accurately;
-- cell arrangements different from a standard rectangular grid;
+- smaller number of cells needed to represent a shape accurately;
+- BPS cell arrangement could be different from a standard rectangular grid, allowing different types of convolutions;
 - significant improvement in performance: simply substituting occupancy voxels with  BPS directional vectors results 
 in +9% accuracy improvement of a VoxNet-like Conv3D network on a ModelNet40 classification 
 challenge.
