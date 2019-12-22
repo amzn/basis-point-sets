@@ -17,7 +17,7 @@ noisy scan:
 
 ![Teaser Image](bps_demo.png)
 
-#### Key differences between standard occupancy voxels, TSDF and the proposed BPS representation:
+#### FAQ. Key differences between standard occupancy voxels, TSDF and the proposed BPS representation:
 
 - continuous global information instead of simple binary flags or local distances in the cells;
 - smaller number of cells in order to represent shape accurately;
