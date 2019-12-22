@@ -17,16 +17,12 @@ noisy scan:
 
 ![Teaser Image](bps_demo.png)
 
-*FAQ*: what is the key difference between standard occupancy voxels, TSDF and the proposed BPS representation?
+**FAQ**: key differences between standard occupancy voxels, TSDF and the proposed BPS representation:
 
-_*Answer*_: every BPS cell stores some _continuous global information_ instead
-of simple binary flags or local distances. In the latter case, most of the voxels remain empty and, moreover, the feature
-vector will change dramatically when slight translations or rotations are applied to an object. In comparison, every BPS
-cell always stores some information about the encoded object and the feature vector changes smoothly with respect
-to affine transformations. From this also stems the second important observation: when every cell stores some global
-information, we can use a _smaller number of cells in order to represent the shape accurately_, thus avoiding
-the cubical complexity of the extensive grid representation. BPS also allows arrangements different from a standard 
-rectangular grid. Empirically, *simply substituting occupancy voxels with  BPS directional vectors results 
+- continuous global information instead of simple binary flags or local distances in the cells;
+- smaller number of cells in order to represent shape accurately;
+- cell arrangements different from a standard rectangular grid;
+- significant improvement in performance: *simply substituting occupancy voxels with  BPS directional vectors results 
 in +9% accuracy improvement of a VoxNet-like Conv3D network on a ModelNet40 classification 
 challenge*,  exceeding performance of the PointNet\PointNet++ frameworks while having an order of magnitude 
 less floating point operations.
