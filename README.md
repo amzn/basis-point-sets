@@ -20,10 +20,10 @@ noisy scan:
 **FAQ**: what are the key differences between _**standard occupancy voxels, TSDF**_ and the proposed BPS representation?
 
 - continuous global vectors instead of simple binary flags or local distances in the cells;
-- smaller number of cells needed to represent a shape accurately;
+- smaller number of cells required to represent a shape accurately;
 - BPS cell arrangement could be different from a standard rectangular grid, allowing different types of convolutions;
 - significant improvement in performance: simply substituting occupancy voxels with  BPS directional vectors results 
-in +9% accuracy improvement of a VoxNet-like Conv3D network on a ModelNet40 classification 
+in +9% accuracy improvement of a VoxNet-like 3D-convolutional  network on a ModelNet40 classification 
 challenge.
 
  Check our [ICCV 2019 paper](https://arxiv.org/abs/1908.09186) for more 
@@ -33,9 +33,9 @@ challenge.
  
 ### Requirements
 
-- Python >= 3.7
-- scikit-learn >= 0.21
-- tqdm >= 4.3
+- Python >= 3.7;
+- scikit-learn >= 0.21;
+- tqdm >= 4.3;
 - PyTorch >= 1.3 (for running provided demos)
 
 ### Installation
