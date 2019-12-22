@@ -4,7 +4,7 @@
 representations.
 
 It is based on a _**simple idea**_: select k fixed points in space and compute vectors from  these basis points to the nearest
-points in the point cloud; use these vectors (or simply their norms) as features:
+points in a point cloud; use these vectors (or simply their norms) as features:
 
 ![Teaser Image](bps.gif)
 
@@ -24,7 +24,7 @@ noisy scan:
 - cell arrangements different from a standard rectangular grid;
 - significant improvement in performance: simply substituting occupancy voxels with  BPS directional vectors results 
 in +9% accuracy improvement of a VoxNet-like Conv3D network on a ModelNet40 classification 
-challenge,  exceeding performance of the PointNet\PointNet++ frameworks while having an order of magnitude 
+challenge,  exceeding performance of the PointNet++ framework while having an order of magnitude 
 less floating point operations.
 
  Check our [ICCV 2019 paper](https://arxiv.org/abs/1908.09186) for more 
