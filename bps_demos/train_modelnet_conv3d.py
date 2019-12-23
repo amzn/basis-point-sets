@@ -175,29 +175,34 @@ def main():
     print("training started..")
     model = model.to(DEVICE)
 
-    for i in range(0, 5):
-        print("round %d" % i)
-        optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
-        n_epochs = 120
-        pbar = range(0, n_epochs)
-        test_accs = []
-        test_losses = []
+    print("round %d" % i)
+    optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
+    n_epochs = 900
 
-        start = time.time()
-        for epoch_idx in pbar:
-            fit(model, DEVICE, train_loader, optimizer)
-            if epoch_idx == 100:
-                for param_group in optimizer.param_groups:
-                    print("decreasing the learning rate to 1e-4..")
-                    param_group['lr'] = 1e-4
-            if epoch_idx % 10 == 0:
-                test_loss, test_acc = test(model, DEVICE, test_loader, epoch_idx)
-                test_accs.append(test_acc)
-                test_losses.append(test_loss)
+    pbar = range(0, n_epochs)
+    test_accs = []
+    test_losses = []
+
+    start = time.time()
+    for epoch_idx in pbar:
+        fit(model, DEVICE, train_loader, optimizer)
+        if epoch_idx == 700:
+            for param_group in optimizer.param_groups:
+                print("decreasing the learning rate to 1e-4..")
+                param_group['lr'] = 1e-4
+        if epoch_idx == 750:
+            for param_group in optimizer.param_groups:
+                print("decreasing the learning rate to 1e-5..")
+                param_group['lr'] = 1e-5
+        if epoch_idx % 10 == 0:
+            test_loss, test_acc = test(model, DEVICE, test_loader, epoch_idx)
+            test_accs.append(test_acc)
+            test_losses.append(test_loss)
+
+    end = time.time()
 
     _, test_acc = test(model, DEVICE, test_loader, n_epochs)
 
-    end = time.time()
     total_training_time = (end - start) / 60
 
     print("Training finished. Test accuracy: %f . Total training time: %f minutes." % (test_acc, total_training_time))
