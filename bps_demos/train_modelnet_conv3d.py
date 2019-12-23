@@ -175,7 +175,6 @@ def main():
     print("training started..")
     model = model.to(DEVICE)
 
-    print("round %d" % i)
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
     n_epochs = 900
 
