@@ -176,7 +176,7 @@ def main():
     model = model.to(DEVICE)
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
-    n_epochs = 1020
+    n_epochs = 1050
 
     pbar = range(0, n_epochs)
     test_accs = []
