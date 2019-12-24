@@ -59,10 +59,10 @@ class ShapeClassifierConv3D(nn.Module):
         self.bn22 = nn.BatchNorm3d(64)
         self.mp2 = nn.MaxPool3d(kernel_size=(2, 2, 2))
 
-        self.do1 = nn.Dropout(0.9)
+        self.do1 = nn.Dropout(0.8)
         self.fc1 = nn.Linear(in_features=8000, out_features=512)
         self.bn1 = nn.BatchNorm1d(512)
-        self.do2 = nn.Dropout(0.7)
+        self.do2 = nn.Dropout(0.8)
         self.fc3 = nn.Linear(in_features=512, out_features=n_classes)
 
     def forward(self, x):
@@ -172,20 +172,21 @@ def main():
 
     print("defining the model..")
     model = ShapeClassifierConv3D(n_features=n_bps_features, n_classes=N_MODELNET_CLASSES)
-    print("training started..")
-    model = model.to(DEVICE)
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
-    n_epochs = 400
 
+    n_epochs = 1000
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
 
+    print("training started..")
+    model = model.to(DEVICE)
+
     start = time.time()
     for epoch_idx in pbar:
         fit(model, DEVICE, train_loader, optimizer)
-        if epoch_idx == 300:
+        if epoch_idx == 970:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
@@ -194,10 +195,9 @@ def main():
             test_accs.append(test_acc)
             test_losses.append(test_loss)
 
-    end = time.time()
-
     _, test_acc = test(model, DEVICE, test_loader, n_epochs)
 
+    end = time.time()
     total_training_time = (end - start) / 60
 
     print("Training finished. Test accuracy: %f . Total training time: %f minutes." % (test_acc, total_training_time))
