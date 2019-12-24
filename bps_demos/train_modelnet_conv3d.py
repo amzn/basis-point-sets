@@ -62,7 +62,7 @@ class ShapeClassifierConv3D(nn.Module):
         self.do1 = nn.Dropout(0.9)
         self.fc1 = nn.Linear(in_features=8000, out_features=512)
         self.bn1 = nn.BatchNorm1d(512)
-        self.do2 = nn.Dropout(0.5)
+        self.do2 = nn.Dropout(0.7)
         self.fc3 = nn.Linear(in_features=512, out_features=n_classes)
 
     def forward(self, x):
@@ -176,7 +176,7 @@ def main():
     model = model.to(DEVICE)
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
-    n_epochs = 1050
+    n_epochs = 1020
 
     pbar = range(0, n_epochs)
     test_accs = []
