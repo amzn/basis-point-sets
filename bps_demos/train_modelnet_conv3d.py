@@ -59,11 +59,11 @@ class ShapeClassifierConv3D(nn.Module):
         self.bn22 = nn.BatchNorm3d(64)
         self.mp2 = nn.MaxPool3d(kernel_size=(2, 2, 2))
 
-        self.do1 = nn.Dropout(0.95)
+        self.do1 = nn.Dropout(0.9)
         self.fc1 = nn.Linear(in_features=8000, out_features=512)
         self.bn1 = nn.BatchNorm1d(512)
         self.do2 = nn.Dropout(0.8)
-        self.fc3 = nn.Linear(in_features=512, out_features=n_classes)
+        self.fc2 = nn.Linear(in_features=512, out_features=n_classes)
 
     def forward(self, x):
 
@@ -78,7 +78,7 @@ class ShapeClassifierConv3D(nn.Module):
         x = self.do1(x.reshape([-1, 8000]))
         x = self.do2(self.bn1(F.relu(self.fc1(x))))
 
-        x = self.fc3(x)
+        x = self.fc2(x)
 
         return x
 
@@ -175,7 +175,7 @@ def main():
 
     optimizer = pt.optim.Adam(model.parameters(), lr=1e-3)
 
-    n_epochs = 800
+    n_epochs = 1000
     pbar = range(0, n_epochs)
     test_accs = []
     test_losses = []
@@ -186,7 +186,7 @@ def main():
     start = time.time()
     for epoch_idx in pbar:
         fit(model, DEVICE, train_loader, optimizer)
-        if epoch_idx == 700:
+        if epoch_idx == 800:
             for param_group in optimizer.param_groups:
                 print("decreasing the learning rate to 1e-4..")
                 param_group['lr'] = 1e-4
