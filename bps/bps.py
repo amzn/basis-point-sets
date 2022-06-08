@@ -225,7 +225,7 @@ def encode(x, bps_arrangement='random', n_bps_points=512, radius=1.5, bps_cell_t
         elif bps_arrangement == 'grid':
             # in case of a grid basis, we need to find the nearest possible grid size
             grid_size = int(np.round(np.power(n_bps_points, 1 / n_dims)))
-            basis_set = generate_grid_basis(grid_size=grid_size, minv=-radius, maxv=radius)
+            basis_set = generate_grid_basis(grid_size=grid_size, minv=-radius, maxv=radius, n_dims=n_dims)
         elif bps_arrangement == 'custom':
             # in case of a grid basis, we need to find the nearest possible grid size
             if custom_basis is not None:
